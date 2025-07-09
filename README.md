@@ -1,8 +1,9 @@
+
 # DATN_WEB_MCFOOD_FrontEnd
 
-# 🚀 My React Project
+## 🚀 My React Project
 
-## 📄 Giới thiệu
+### 📄 Giới thiệu
 
 Đây là dự án React sử dụng các thư viện phổ biến như:
 
@@ -13,42 +14,51 @@
 
 ---
 
-## 💡 Yêu cầu
+### 💡 Yêu cầu
 
 - Node.js >= 14
 - npm >= 6 (hoặc yarn)
 
 ---
 
-## ⚡ Cách cài đặt & chạy dự án
+### ⚡ Cách cài đặt & chạy dự án
 
-### 1️⃣ Clone repository
-
-```bash
-git clone <link-repo-của-bạn>
-
-### 2️⃣ Di chuyển vào thư mục dự án
+#### 1️⃣ Clone repository
 
 ```bash
+git clone <link-repo-cua-ban>
+```
 
-cd <tên-thư-mục-dự-án>
-
-### 3️⃣ Cài đặt dependencies
+#### 2️⃣ Di chuyển vào thư mục dự án
 
 ```bash
+cd <ten-thu-muc-du-an>
+```
 
+#### 3️⃣ Cài đặt dependencies
+
+```bash
 npm install
+```
+```
+npm install react-slick slick-carousel
+```
+```
+npm install react-icons
+```
+```
+npm install lucide-react
+```
+⚠️ **Lưu ý:**  
+- Thư mục `node_modules` **không được push** lên Git.  
+- Khi clone về máy, bắt buộc phải chạy `npm install` để tải các thư viện được khai báo trong `package.json` và `package-lock.json`.
 
-⚠️ Lưu ý:
-Thư mục node_modules không được push lên Git. Khi clone về, bắt buộc phải chạy npm install để tải các thư viện được khai báo trong package.json và package-lock.json.
-
-
-
-###4️⃣ Chạy dự án ở môi trường phát triển
+#### 4️⃣ Chạy dự án ở môi trường phát triển
 
 ```bash
-
 npm start
+```
 
-App sẽ chạy ở địa chỉ: http://localhost:3000
+Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:3000](http://localhost:3000)
 
+---
