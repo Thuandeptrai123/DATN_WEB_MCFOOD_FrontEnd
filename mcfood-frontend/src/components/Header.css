@@ -1,4 +1,4 @@
-.header {
+/* .header {
   background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
   padding: 20px 40px;
   color: #fff;
@@ -84,4 +84,271 @@
   border: 2px solid #fff;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+} */
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Logo/Brand Section */
+.header-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-logo {
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.1);
+}
+
+.header-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff6b35;
+  letter-spacing: 1px;
+}
+
+/* Navigation */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.header-link:hover {
+  color: #ff6b35;
+  background-color: #fff5f2;
+}
+
+.header-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #ff6b35;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.header-link:hover::after {
+  width: 80%;
+}
+
+.header-login-btn {
+  text-decoration: none;
+  color: #fff;
+  background-color: #ff6b35;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 2px solid #ff6b35;
+}
+
+.header-login-btn:hover {
+  background-color: #fff;
+  color: #ff6b35;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 0.5rem;
+  gap: 4px;
+}
+
+.mobile-menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Tablet Styles */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .header-nav {
+    gap: 1.5rem;
+  }
+
+  .header-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .header-login-btn {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .header-brand {
+    font-size: 1.3rem;
+  }
+
+  .header-logo {
+    font-size: 1.8rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+  .header {
+    padding: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .header-logo-container {
+    flex: 1;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .header-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    background-color: #fff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease;
+  }
+
+  .header-nav.active {
+    display: flex;
+  }
+
+  .header-link {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    margin: 0;
+  }
+
+  .header-link:last-child {
+    border-bottom: none;
+  }
+
+  .header-login-btn {
+    margin: 0.5rem 0;
+    text-align: center;
+    border-radius: 6px;
+  }
+
+  .header-brand {
+    font-size: 1.2rem;
+  }
+
+  .header-logo {
+    font-size: 1.6rem;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+  .header {
+    padding: 0.8rem;
+  }
+
+  .header-brand {
+    font-size: 1.1rem;
+  }
+
+  .header-logo {
+    font-size: 1.4rem;
+  }
+
+  .header-nav {
+    padding: 0.8rem;
+  }
+
+  .header-link {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .header-login-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for mobile menu */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth scrolling for sticky header */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Active link styles */
+.header-link.active {
+  color: #ff6b35;
+  background-color: #fff5f2;
+}
+
+.header-link.active::after {
+  width: 80%;
 }
