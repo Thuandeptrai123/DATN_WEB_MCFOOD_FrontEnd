@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, User, Mail, MapPin, Lock, UserCheck } from "lucide-react";
-import "./Register.css"; 
+// import "../Styles/Register.css"; 
+import "../Styles/Register.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 import { useNavigate } from "react-router-dom";
 
 

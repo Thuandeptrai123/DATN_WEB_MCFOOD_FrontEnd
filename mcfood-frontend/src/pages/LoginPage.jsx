@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, UserCheck } from "lucide-react";
-import "./Login.css";
+// import "./Login.css";
+import "../Styles/Login.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {

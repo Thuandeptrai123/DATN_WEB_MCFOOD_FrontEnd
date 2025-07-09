@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFoodById } from "../api/foodService";
-import "./FoodDetail.css";
+// import "./FoodDetail.css";
+import "../Styles/FoodDetail.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 
 export default function FoodDetail() {
   const { id } = useParams();

@@ -5,8 +5,8 @@ import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./ProductList.css"; // Import CSS riêng
-
+// import "./ProductList.css"; // Import CSS riêng
+import "../Styles/ProductList.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 export default function ProductList() {
   const [foods, setFoods] = useState([]);
   const [combos, setCombos] = useState([]);

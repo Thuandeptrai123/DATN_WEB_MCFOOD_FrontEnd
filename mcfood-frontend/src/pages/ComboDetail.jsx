@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getComboById } from "../api/CombosService";
-import "./ComboDetail.css";
+// import "./ComboDetail.css";
+import "../Styles/ComboDetail.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 
 export default function ComboDetail() {
   const { id } = useParams();
