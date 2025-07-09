@@ -1,0 +1,275 @@
+.cd-page-bg {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.cd-loading-bg {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cd-loading-center {
+  text-align: center;
+}
+
+.cd-loading-text {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.cd-notfound-box {
+  background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+  border: 1px solid #f5c6cb;
+  border-radius: 15px;
+  padding: 40px;
+  text-align: center;
+  color: #721c24;
+}
+
+.cd-btn-back {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #721c24;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.cd-breadcrumb {
+  margin-bottom: 30px;
+}
+
+.cd-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.cd-link {
+  color: #666;
+  cursor: pointer;
+}
+
+.cd-link:hover {
+  color: #000;
+}
+
+.cd-separator {
+  color: #ccc;
+}
+
+.cd-current {
+  color: #000;
+  font-weight: bold;
+}
+
+.cd-row-gap {
+  gap: 0 40px;
+}
+
+.cd-img-col {
+  margin-bottom: 40px;
+}
+
+.cd-img-wrapper {
+  position: relative;
+}
+
+.cd-img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.cd-img:hover {
+  transform: scale(1.02);
+}
+
+.cd-badge-combo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, #000, #333);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.cd-info-box {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.cd-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000;
+  line-height: 1.2;
+}
+
+.cd-description {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.cd-items-box {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.cd-items-box h5 {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.cd-items-box ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.cd-items-box li {
+  margin-bottom: 10px;
+}
+
+.cd-price-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cd-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.cd-quantity-wrapper {
+  margin-bottom: 30px;
+}
+
+.cd-quantity-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.cd-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cd-btn-circle {
+  width: 45px;
+  height: 45px;
+  border: 2px solid #000;
+  background: white;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cd-btn-circle:hover {
+  background: #000;
+  color: white;
+}
+
+.cd-quantity-number {
+  font-size: 1.3rem;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
+
+.cd-total-wrapper {
+  background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.cd-total-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cd-total-text {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.cd-total-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.cd-action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.cd-btn-add {
+  flex: 1;
+  padding: 15px;
+  background: linear-gradient(45deg, #000, #333);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cd-btn-add:hover {
+  background: linear-gradient(45deg, #333, #555);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.cd-btn-back-outline {
+  padding: 15px;
+  background: white;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cd-btn-back-outline:hover {
+  background: #000;
+  color: white;
+}

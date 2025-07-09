@@ -1,0 +1,165 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f0f4ff, #e7f0ff);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+}
+
+.login-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login-header p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  padding-left: 36px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #4f46e5;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon__icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.eye-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #4338ca, #7e22ce);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-google {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-google:hover {
+  background: #f7f7f7;
+}
+
+.or-divider {
+  text-align: center;
+  margin: 15px 0;
+  position: relative;
+}
+
+.or-divider::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #ddd;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+}
+
+.or-divider span {
+  position: relative; /* thêm dòng này để span nằm trên */
+  background: white;
+  padding: 0 10px;
+  color: #666;
+  z-index: 1; /* thêm dòng này để đảm bảo span nổi lên trên line */
+}
+
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-link button {
+  background: none;
+  color: #4f46e5;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
