@@ -11,7 +11,7 @@ export default function Footer() {
         borderTop: "1px solid #333",
       }}
     >
-      <p>&copy; 2025 Your App Name. All rights reserved.</p>
+      <p>&copy; 2025 KaiZen Team - MCFOOD. All rights reserved.</p>
     </footer>
   );
 }

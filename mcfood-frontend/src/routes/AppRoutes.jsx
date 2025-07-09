@@ -14,6 +14,11 @@ import FoodTypeList from "../pages/Admin/FoodType";
 import CreateFoodType from "../pages/Admin/CreateFoodType";
 import EditFoodType from "../pages/Admin/EditFoodType";
 import FoodList from "../pages/Admin/FoodList";
+import ProductList from "../pages/ProductList";
+import FoodDetail from "../pages/FoodDetail";
+import ComboDetail from "../pages/ComboDetail";
+
+
 
 export default function AppRoutes() {
   return (
@@ -34,6 +39,9 @@ export default function AppRoutes() {
           <Route path="/createfoodtype" element={<CreateFoodType />} />
           <Route path="/editfoodtype/:id" element={<EditFoodType />} />
           <Route path="/foods" element={<FoodList />} />
+          <Route path="/productList" element={<ProductList />} />
+          <Route path="/foods/:id" element={<FoodDetail />} />
+          <Route path="/combos/:id" element={<ComboDetail />} />
         </Routes>
       </MainLayout>
     </Router>
