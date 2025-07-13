@@ -18,6 +18,7 @@ import ProductList from "../pages/ProductList";
 import FoodDetail from "../pages/FoodDetail";
 import ComboDetail from "../pages/ComboDetail";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
+import ForgotPass from "../pages/ForgotPass";
 
 export default function AppRoutes() {
   return (
@@ -49,6 +50,7 @@ export default function AppRoutes() {
                 <Route path="/foods/:id" element={<FoodDetail />} />
                 <Route path="/combos/:id" element={<ComboDetail />} />
                 <Route path="/change-password" element={<ChangePasswordPage />} />
+                <Route path="/forgot-password" element={<ForgotPass />} />
               </Routes>
             </MainLayout>
           }

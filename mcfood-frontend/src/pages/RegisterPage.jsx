@@ -94,7 +94,7 @@ export default function Register() {
           <div className="form-group">
             <label>Tên đăng nhập</label>
             <div className="input-icon">
-              <User className="input-icon__icon" />
+              {/* <User className="input-icon__icon" /> */}
               <input
                 type="text"
                 name="userName"
@@ -109,7 +109,7 @@ export default function Register() {
           <div className="form-group">
             <label>Email</label>
             <div className="input-icon">
-              <Mail className="input-icon__icon" />
+              {/* <Mail className="input-icon__icon" /> */}
               <input
                 type="email"
                 name="email"
@@ -148,9 +148,9 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label>Địa chỉ</label>
+            <label>Địa chỉ </label>
             <div className="input-icon">
-              <MapPin className="input-icon__icon" />
+              {/* <MapPin className="input-icon__icon" /> */}
               <input
                 type="text"
                 name="address"
@@ -165,7 +165,7 @@ export default function Register() {
           <div className="form-group">
             <label>Mật khẩu</label>
             <div className="input-icon">
-              <Lock className="input-icon__icon" />
+              {/* <Lock className="input-icon__icon" /> */}
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -187,7 +187,7 @@ export default function Register() {
           <div className="form-group">
             <label>Xác nhận mật khẩu</label>
             <div className="input-icon">
-              <Lock className="input-icon__icon" />
+              {/* <Lock className="input-icon__icon" /> */}
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"

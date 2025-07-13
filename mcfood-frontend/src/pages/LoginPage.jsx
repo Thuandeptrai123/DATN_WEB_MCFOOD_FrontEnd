@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, UserCheck } from "lucide-react";
-// import "./Login.css";
 import "../Styles/Login.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 import { useNavigate } from "react-router-dom";
 
@@ -26,9 +25,10 @@ export default function Login() {
     // Gọi API login ở đây
   };
 
-   const handleRegisterRedirect = () => {
+  const handleRegisterRedirect = () => {
     navigate("/register");
   };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -44,7 +44,6 @@ export default function Login() {
           <div className="form-group">
             <label>Email</label>
             <div className="input-icon">
-              <Mail className="input-icon__icon" />
               <input
                 type="email"
                 name="email"
@@ -58,7 +57,6 @@ export default function Login() {
           <div className="form-group">
             <label>Mật khẩu</label>
             <div className="input-icon">
-              <Lock className="input-icon__icon" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -84,10 +82,18 @@ export default function Login() {
 
           <button type="button" className="btn-google">Đăng nhập với Google</button>
 
+          <div className="forgot-password-link">
+            <button type="button" onClick={() => navigate("/forgot-password")}>
+              Quên mật khẩu?
+            </button>
+          </div>
+
           <div className="login-link">
             <p>
               Chưa có tài khoản?{" "}
-              <button type="button" onClick={handleRegisterRedirect} >Đăng kí ngay</button>
+              <button type="button" onClick={handleRegisterRedirect}>
+                Đăng kí ngay
+              </button>
             </p>
           </div>
         </form>

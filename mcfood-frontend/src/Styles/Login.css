@@ -163,3 +163,17 @@
   cursor: pointer;
   text-decoration: underline;
 }
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.forgot-password-link button {
+  background: none;
+  color: #4f46e5;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
