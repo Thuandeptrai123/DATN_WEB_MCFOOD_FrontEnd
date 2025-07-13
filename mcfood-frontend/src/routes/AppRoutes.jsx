@@ -34,7 +34,7 @@ export default function AppRoutes() {
           element={
             <MainLayout>
               <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
@@ -46,7 +46,7 @@ export default function AppRoutes() {
                 <Route path="/createfoodtype" element={<CreateFoodType />} />
                 <Route path="/editfoodtype/:id" element={<EditFoodType />} />
                 <Route path="/foods" element={<FoodList />} />
-                <Route path="/productList" element={<ProductList />} />
+                <Route path="/" element={<ProductList />} />
                 <Route path="/foods/:id" element={<FoodDetail />} />
                 <Route path="/combos/:id" element={<ComboDetail />} />
                 <Route path="/change-password" element={<ChangePasswordPage />} />

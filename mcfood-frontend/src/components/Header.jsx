@@ -33,15 +33,15 @@ export default function Header() {
 
       {/* Navigation */}
       <nav className={`header-nav ${isMobileMenuOpen ? 'active' : ''}`}>
-        <Link 
+        {/* <Link 
           to="/" 
           className="header-link"
           onClick={closeMobileMenu}
         >
           Trang chủ
-        </Link>
+        </Link> */}
         <Link 
-          to="/productlist" 
+          to="/" 
           className="header-link"
           onClick={closeMobileMenu}
         >
