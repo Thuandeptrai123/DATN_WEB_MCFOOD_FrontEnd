@@ -1,0 +1,141 @@
+/* ProfilePage.css */
+
+.profile-card {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.update-btn {
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #7c3aed;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.update-btn:hover {
+  background-color: #5b21b6;
+}
+
+.info-group p {
+  margin: 8px 0;
+}
+
+.section-divider {
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+.action-buttons {
+  text-align: center;
+}
+
+.action-btn {
+  margin: 8px;
+  background: linear-gradient(to right, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.action-btn:hover {
+  background: linear-gradient(to right, #5b21b6, #3b82f6);
+  transform: translateY(-2px);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.overlay-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.overlay-content h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.overlay-content .form-group {
+  margin-bottom: 15px;
+}
+
+.overlay-content label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.overlay-content input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.overlay-content input:focus {
+  border-color: #7c3aed;
+  outline: none;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.edit-buttons button {
+  flex: 1;
+  margin: 0 5px;
+  background: linear-gradient(to right, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  padding: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.edit-buttons button:hover {
+  background: linear-gradient(to right, #5b21b6, #3b82f6);
+  transform: translateY(-2px);
+}
