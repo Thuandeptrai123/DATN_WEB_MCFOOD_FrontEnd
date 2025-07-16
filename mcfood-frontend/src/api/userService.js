@@ -1,25 +1,20 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/User"; // thay url của bạn
+const API_URL = "https://localhost:7233/api/User"; // Đúng port BE
 
-// const getProfile = async (token) => {
-//   return axios.get(`${API_URL}/${getUserId()}`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-// };
-// Gọi user info (ví dụ từ API /api/User/{id}), hoặc tự viết thêm /me
-const getProfile = (id, token) => {
-  return axios.get(`${API_URL}/${id}`, {
+export const getProfileMe = async (token) => {
+  const res = await axios.get(`${API_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  return res.data;
 };
 
+
 const updateProfile = (formData, token) => {
-  return axios.put(API_URL, formData, {
+  return axios.put(`${API_URL}/update-profile`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
@@ -28,7 +23,7 @@ const updateProfile = (formData, token) => {
 };
 
 
-const changePassword = async (data, token) => {
+const changePassword = (data, token) => {
   return axios.put(`${API_URL}/change-password`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -36,13 +31,8 @@ const changePassword = async (data, token) => {
   });
 };
 
-const getUserId = () => {
-  // giả sử lưu ID trong localStorage khi login
-  return localStorage.getItem("userId");
-};
-
 export default {
-  getProfile,
+  getProfileMe,
   updateProfile,
   changePassword,
 };

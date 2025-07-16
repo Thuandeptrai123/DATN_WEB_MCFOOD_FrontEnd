@@ -1,9 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/authSlice";
 import "./Header.css";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Lấy user từ store
+  const user = useSelector((state) => state.auth.user);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -11,6 +18,11 @@ export default function Header() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/"); // Chuyển hướng về trang chủ hoặc login
   };
 
   return (
@@ -23,7 +35,7 @@ export default function Header() {
 
       {/* Mobile Menu Toggle Button */}
       <div 
-        className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+        className={`mobile-menu-toggle ${isMobileMenuOpen ? "active" : ""}`}
         onClick={toggleMobileMenu}
       >
         <span></span>
@@ -32,14 +44,7 @@ export default function Header() {
       </div>
 
       {/* Navigation */}
-      <nav className={`header-nav ${isMobileMenuOpen ? 'active' : ''}`}>
-        {/* <Link 
-          to="/" 
-          className="header-link"
-          onClick={closeMobileMenu}
-        >
-          Trang chủ
-        </Link> */}
+      <nav className={`header-nav ${isMobileMenuOpen ? "active" : ""}`}>
         <Link 
           to="/" 
           className="header-link"
@@ -54,20 +59,44 @@ export default function Header() {
         >
           Giỏ hàng
         </Link>
-        <Link 
-          to="/login" 
-          className="header-login-btn"
-          onClick={closeMobileMenu}
-        >
-          Đăng nhập
-        </Link>
-        <Link 
-          to="/register" 
-          className="header-login-btn"
-          onClick={closeMobileMenu}
-        >
-          Đăng ký
-        </Link>
+
+        {!user ? (
+          <>
+            <Link 
+              to="/login" 
+              className="header-login-btn"
+              onClick={closeMobileMenu}
+            >
+              Đăng nhập
+            </Link>
+            <Link 
+              to="/register" 
+              className="header-login-btn"
+              onClick={closeMobileMenu}
+            >
+              Đăng ký
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link 
+              to="/profile" 
+              className="header-link"
+              onClick={closeMobileMenu}
+            >
+              Tài khoản
+            </Link>
+            <button
+              className="header-logout-btn"
+              onClick={() => {
+                closeMobileMenu();
+                handleLogout();
+              }}
+            >
+              Đăng xuất
+            </button>
+          </>
+        )}
       </nav>
     </header>
   );

@@ -1,18 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import userApi from "../api/userService";
 import "../Styles/ProfilePage.css";
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState({
-    userName: "user1@gmail.com",
-    email: "user1@gmail.com",
-    firstName: "Nguyen",
-    lastName: "A",
-    address: "Hà Nội",
-    phoneNumbers: "0123456789",
-    avatar: "https://i.pravatar.cc/150?img=3"
-  });
-
+  const [profile, setProfile] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  // Lấy token trực tiếp từ localStorage
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      if (token) {
+        const res = await userApi.getProfileMe(token);
+        console.log("👉 API response:", res);
+
+        if (res && res.Data) {
+          const data = res.Data;
+          setProfile({
+            userName: data.UserName,
+            email: data.Email,
+            firstName: data.FirstName,
+            lastName: data.LastName,
+            address: data.Address,
+            phoneNumbers: data.PhoneNumbers,
+            avatar: data.ProfileImage
+                ? `https://localhost:7233${data.ProfileImage}`
+                : "https://i.pravatar.cc/150",
+
+          });
+        } else {
+          console.error("❌ API trả về lỗi hoặc thiếu Data:", res);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Lỗi lấy profile:", error);
+    }
+  };
+
+  fetchProfile();
+}, [token]);
+
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -21,14 +51,51 @@ export default function ProfilePage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       setProfile({ ...profile, avatar: URL.createObjectURL(file) });
     }
   };
 
-  const handleSave = () => {
-    // Logic lưu profile
-    setShowEdit(false);
+  const handleSave = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("FirstName", profile.firstName);
+      formData.append("LastName", profile.lastName);
+      formData.append("Address", profile.address);
+      formData.append("PhoneNumbers", profile.phoneNumbers);
+
+      if (selectedFile) {
+        formData.append("ProfileImage", selectedFile);
+      }
+
+      await userApi.updateProfile(formData, token);
+
+      alert("✅ Cập nhật thành công!");
+      setShowEdit(false);
+
+      // Reload profile sau update
+      const res = await userApi.getProfileMe(token);
+      const data = res.data.Data;
+      setProfile({
+        userName: data.UserName,
+        email: data.Email,
+        firstName: data.FirstName,
+        lastName: data.LastName,
+        address: data.Address,
+        phoneNumbers: data.PhoneNumbers,
+        avatar: data.ProfileImage
+          ? `http://localhost:7233${data.ProfileImage}`
+          : "https://i.pravatar.cc/150",
+      });
+    } catch (error) {
+      console.error("❌ Lỗi cập nhật profile:", error);
+      alert("❌ Lỗi cập nhật profile");
+    }
   };
+
+  if (!profile) {
+    return <p>Đang tải thông tin...</p>;
+  }
 
   return (
     <div className="profile-card">
@@ -65,24 +132,6 @@ export default function ProfilePage() {
           <div className="overlay-content">
             <h3>Chỉnh sửa</h3>
             <div className="form-group">
-              <label>Tên đăng nhập</label>
-              <input
-                type="text"
-                name="userName"
-                value={profile.userName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
               <label>Họ</label>
               <input
                 type="text"
@@ -116,6 +165,13 @@ export default function ProfilePage() {
                 name="phoneNumbers"
                 value={profile.phoneNumbers}
                 onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Ảnh đại diện</label>
+              <input
+                type="file"
+                onChange={handleFileChange}
               />
             </div>
             <div className="edit-buttons">
