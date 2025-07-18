@@ -3,8 +3,8 @@ import HomePage from "../pages/HomePage";
 import ProductDetail from "../pages/ProductDetail";
 import CartPage from "../pages/CartPage";
 import CheckoutPage from "../pages/CheckoutPage";
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
+import LoginPage from "../pages/LoginCustomer";
+import RegisterPage from "../pages/RegisterCustomer";
 import OrderHistory from "../pages/OrderHistory";
 import ProfilePage from "../pages/ProfilePage";
 import Dashboard from "../pages/Admin/Dashboard";
@@ -19,6 +19,7 @@ import FoodDetail from "../pages/FoodDetail";
 import ComboDetail from "../pages/ComboDetail";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPass from "../pages/ForgotPass";
+import ConfirmEmail from "../pages/ConfirmEmail";
 
 export default function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoutes() {
           element={
             <MainLayout>
               <Routes>
+  <Route path="/confirm-email" element={<ConfirmEmail />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<CartPage />} />
