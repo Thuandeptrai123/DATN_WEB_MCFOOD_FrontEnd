@@ -183,3 +183,14 @@
   margin-top: 10px;
   text-align: center;
 }
+.btn1 {
+  background: none;
+  color: #fff;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.btn1:hover {
+    border: #fff;
+}
