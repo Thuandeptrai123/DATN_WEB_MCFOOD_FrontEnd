@@ -1,122 +1,247 @@
-import { useEffect, useState } from "react";
-import { getCartByCustomer, removeItemFromCart, updateCartItemQuantity } from "../api/cartService";
+import React, { useEffect, useState } from "react";
+import CartService from "../api/cartService";
+import "../Styles/CartPage.css"; // 👉 import file CSS đã tách
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; // 
 
-export default function CartPage() {
-  const customerId = "YOUR_CUSTOMER_ID"; // 👈 chỉnh lại ID thật (lấy từ localStorage hoặc context)
+const CartPage = () => {
   const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const ImageAPIUrl = "https://localhost:7233";
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); 
+  const fetchCart = async () => {
+  setLoading(true);
+  try {
+    const data = await CartService.getUserCart();
+    setCart(data);
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate("/401"); // 👈 chuyển hướng nếu chưa đăng nhập
+    } else {
+      console.error("Lỗi khi lấy giỏ hàng:", error);
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchCart();
   }, []);
 
-  const fetchCart = async () => {
+  const handleQuantityChange = async (cartItemId, quantity) => {
+    if (quantity < 1) return;
     try {
-      const res = await getCartByCustomer(customerId);
-      setCart(res.data.Data);
-    } catch (err) {
-      console.error("Lỗi khi lấy giỏ hàng:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRemove = async (itemId) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xoá sản phẩm này?")) return;
-    try {
-      await removeItemFromCart(itemId);
+      await CartService.updateCartItem(cartItemId, quantity);
       fetchCart();
-    } catch (err) {
-      console.error("Lỗi khi xoá:", err);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật số lượng:", error);
     }
   };
 
-  const handleQuantityChange = async (itemId, newQuantity) => {
-    if (newQuantity < 1) return;
+  const handleRemoveItem = async (cartItemId) => {
     try {
-      await updateCartItemQuantity(itemId, newQuantity);
+      await CartService.removeCartItem(cartItemId);
       fetchCart();
-    } catch (err) {
-      console.error("Lỗi khi cập nhật số lượng:", err);
+    } catch (error) {
+      console.error("Lỗi khi xóa món:", error);
     }
   };
 
-  // 👉 Hàm tính tổng tiền
-  const calculateTotal = () => {
-    if (!cart || !cart.items) return 0;
-
-    return cart.items.reduce((total, item) => {
-      const price = item.food?.price || item.combo?.price || 0;
-      return total + price * item.quantity;
-    }, 0);
+  const handleClearCart = async () => {
+    try {
+      await CartService.clearCart();
+      fetchCart();
+    } catch (error) {
+      console.error("Lỗi khi xóa toàn bộ giỏ hàng:", error);
+    }
   };
+
+  const renderCartItem = (item) => {
+    const isFood = item.FoodDetails !== null;
+    const details = isFood ? item.FoodDetails : item.ComboDetails;
+    const imageUrl = details?.ImageUrl;
+
+    return (
+      <div key={item.CartItemId} className="card mb-3 border-0 shadow-sm">
+        <div className="card-body">
+          <div className="row align-items-center">
+            <div className="col-md-3 col-4">
+              <div className="position-relative">
+                {imageUrl ? (
+                  <img 
+                    src={`https://localhost:7233${imageUrl}`} 
+                    alt={details.Name || item.ProductName}
+                    className="img-fluid rounded"
+                    style={{
+                      width: '100%',
+                      height: '120px',
+                      objectFit: 'cover',
+                      border: '1px solid #e9ecef'
+                    }}
+                  />
+                ) : (
+                  <div 
+                    className="d-flex align-items-center justify-content-center bg-light rounded text-muted"
+                    style={{ width: '100%', height: '120px', border: '1px solid #e9ecef' }}
+                  >
+                    <i className="fas fa-image fa-2x"></i>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="col-md-5 col-8">
+              <h5 className="card-title mb-2 fw-bold">{item.ProductName}</h5>
+              <p className="text-muted mb-1">
+                <small>Đơn giá: {(item.TotalPrice / item.TotalQuantity).toLocaleString()} VND</small>
+              </p>
+              <p className="fw-semibold mb-0">
+                Thành tiền: <span className="text-dark">{item.TotalPrice.toLocaleString()} VND</span>
+              </p>
+            </div>
+
+            <div className="col-md-2 col-6 mt-2 mt-md-0">
+              <div className="input-group input-group-sm">
+                <button 
+                  className="btn btn-outline-dark"
+                  onClick={() => handleQuantityChange(item.CartItemId, item.TotalQuantity - 1)}
+                  disabled={item.TotalQuantity <= 1}
+                >
+                  <i className="fas fa-minus">-</i>
+                </button>
+                <input 
+                  type="text" 
+                  className="form-control text-center fw-semibold" 
+                  value={item.TotalQuantity}
+                  readOnly
+                  style={{ maxWidth: '60px' }}
+                />
+                <button 
+                  className="btn btn-outline-dark"
+                  onClick={() => handleQuantityChange(item.CartItemId, item.TotalQuantity + 1)}
+                >
+                  <i className="fas fa-plus">+</i>
+                </button>
+              </div>
+            </div>
+
+            <div className="col-md-2 col-6 mt-2 mt-md-0">
+              <button 
+                className="btn btn-outline-danger btn-sm w-100"
+                onClick={() => handleRemoveItem(item.CartItemId)}
+              >
+                <i className="fas fa-trash me-1"></i> Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  if (loading || !cart) {
+    return (
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-6 text-center">
+            <div className="spinner-border text-dark" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-muted">Đang tải giỏ hàng...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const foodItems = cart.Items?.filter((item) => item.FoodDetails !== null) || [];
+  const comboItems = cart.Items?.filter((item) => item.ComboDetails !== null) || [];
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">🛒 Giỏ hàng của bạn</h2>
-      {loading ? (
-        <div className="text-center">
-          <div className="spinner-border text-primary" />
-          <p className="mt-2">Đang tải giỏ hàng...</p>
-        </div>
-      ) : !cart || !cart.items || cart.items.length === 0 ? (
-        <div className="alert alert-info text-center">Giỏ hàng của bạn đang trống.</div>
-      ) : (
-        <>
+    <>
+      <div className="cart-header">
+        <div className="container">
           <div className="row">
-            {cart.items.map((item) => {
-              const product = item.food || item.combo;
-              const price = product?.price || 0;
-              return (
-                <div className="col-md-6 mb-4" key={item.cartItemId}>
-                  <div className="card shadow-sm border-dark">
-                    <img
-                      src={`${ImageAPIUrl}${product?.imageUrl}`}
-                      className="card-img-top"
-                      alt={product?.name}
-                      style={{ height: "200px", objectFit: "cover" }}
-                      onError={(e) => (e.target.src = "/default-image.jpg")}
-                    />
-                    <div className="card-body text-center">
-                      <h5 className="card-title">{product?.name}</h5>
-                      <p className="fw-bold mb-2">{price?.toLocaleString()} ₫</p>
-                      <div className="d-flex justify-content-center align-items-center gap-2 mb-3">
-                        <button
-                          className="btn btn-outline-dark"
-                          onClick={() => handleQuantityChange(item.cartItemId, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button
-                          className="btn btn-outline-dark"
-                          onClick={() => handleQuantityChange(item.cartItemId, item.quantity + 1)}
-                        >
-                          +
-                        </button>
-                      </div>
-                      <button
-                        className="btn btn-danger w-100"
-                        onClick={() => handleRemove(item.cartItemId)}
-                      >
-                        Xoá
-                      </button>
-                    </div>
+            <div className="col-12">
+              <h1 className="display-5 fw-bold mb-0">
+                <i className="fas fa-shopping-cart me-3"></i>
+                Giỏ hàng của bạn
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container pb-5">
+        {(foodItems.length > 0 || comboItems.length > 0) ? (
+          <>
+            {foodItems.length > 0 && (
+              <div className="mb-5">
+                <h3 className="section-title fw-bold mb-4">
+                  <i className="fas fa-utensils me-2"></i>
+                  Món ăn ({foodItems.length} món)
+                </h3>
+                {foodItems.map(renderCartItem)}
+              </div>
+            )}
+
+            {comboItems.length > 0 && (
+              <div className="mb-5">
+                <h3 className="section-title fw-bold mb-4">
+                  <i className="fas fa-box me-2"></i>
+                  Combo ({comboItems.length} combo)
+                </h3>
+                {comboItems.map(renderCartItem)}
+              </div>
+            )}
+
+            <div className="row justify-content-end">
+              <div className="col-md-6 col-lg-4">
+                <div className="total-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span className="h5 mb-0">Tổng số món:</span>
+                    <span className="h5 mb-0 fw-bold">{cart.Items?.length || 0}</span>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <span className="h4 mb-0">Tổng tiền:</span>
+                    <span className="h4 mb-0 fw-bold text-success">
+                      {cart.TotalAmount.toLocaleString()} VND
+                    </span>
+                  </div>
+                  <div className="d-grid gap-2">
+                    <button className="btn btn-success btn-lg fw-semibold">
+                      <i className="fas fa-credit-card me-2"></i>
+                      Thanh toán
+                    </button>
+                    <button 
+                      className="btn btn-custom-clear"
+                      onClick={handleClearCart}
+                    >
+                      <i className="fas fa-trash me-2"></i>
+                      Xóa toàn bộ giỏ hàng
+                    </button>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="empty-cart">
+            <div className="text-center">
+              <i className="fas fa-shopping-cart fa-5x text-muted mb-4"></i>
+              <h3 className="text-muted mb-3">Giỏ hàng của bạn đang trống</h3>
+              <p className="text-muted mb-4">Hãy thêm một số món ăn yêu thích vào giỏ hàng!</p>
+              <button className="btn btn-dark btn-lg">
+                <i className="fas fa-utensils me-2"></i>
+                Khám phá menu
+              </button>
+            </div>
           </div>
-
-          {/* Tổng tiền */}
-          <div className="text-center mt-4">
-            <h4 className="fw-bold">Tổng tiền: {calculateTotal().toLocaleString()} ₫</h4>
-            <button className="btn btn-dark mt-3 px-5 py-2">Thanh toán</button>
-          </div>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
-}
+};
+
+export default CartPage;
