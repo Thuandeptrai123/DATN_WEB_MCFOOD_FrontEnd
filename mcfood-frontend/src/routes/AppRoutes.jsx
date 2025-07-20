@@ -20,6 +20,7 @@ import ComboDetail from "../pages/ComboDetail";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPass from "../pages/ForgotPass";
 import ConfirmEmail from "../pages/ConfirmEmail";
+import UnauthorizedPage  from "../pages/401";
 
 export default function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AppRoutes() {
         {/* Không dùng layout */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/401" element={<UnauthorizedPage  />} />
 
         {/* Các route còn lại dùng layout */}
         <Route
@@ -35,7 +37,7 @@ export default function AppRoutes() {
           element={
             <MainLayout>
               <Routes>
-  <Route path="/confirm-email" element={<ConfirmEmail />} />
+                <Route path="/confirm-email" element={<ConfirmEmail />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<CartPage />} />
