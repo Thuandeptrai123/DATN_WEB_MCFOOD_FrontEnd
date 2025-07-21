@@ -5,8 +5,13 @@ import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// import "./ProductList.css"; // Import CSS riêng
-import "../Styles/ProductList.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
+import "../Styles/ProductList.css";
+import cartService from "../api/cartService"; // ✅ sửa lại đúng import
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import CartService from "../api/cartService";
+
+
 export default function ProductList() {
   const [foods, setFoods] = useState([]);
   const [combos, setCombos] = useState([]);
@@ -14,6 +19,7 @@ export default function ProductList() {
   const [loadingCombos, setLoadingCombos] = useState(true);
   const ImageAPIUrl = "https://localhost:7233";
   const navigate = useNavigate();
+  const customer = useSelector((state) => state.auth.customer);
 
   const bannerImages = [
     "/pic/banner1.jpg",
@@ -24,10 +30,7 @@ export default function ProductList() {
   function NextArrow(props) {
     const { onClick } = props;
     return (
-      <div 
-        className="arrow next" 
-        onClick={onClick}
-      >
+      <div className="arrow next" onClick={onClick}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
           <path d="M8.5 19l7-7-7-7" />
         </svg>
@@ -38,10 +41,7 @@ export default function ProductList() {
   function PrevArrow(props) {
     const { onClick } = props;
     return (
-      <div 
-        className="arrow prev" 
-        onClick={onClick}
-      >
+      <div className="arrow prev" onClick={onClick}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
           <path d="M15.5 19l-7-7 7-7" />
         </svg>
@@ -59,35 +59,55 @@ export default function ProductList() {
     autoplaySpeed: 4000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    dotsClass: "slick-dots custom-dots"
+    dotsClass: "slick-dots custom-dots",
   };
 
   useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const res = await getAllFoods();
+        setFoods(Array.isArray(res.data.Data) ? res.data.Data : []);
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách món ăn:", err);
+        toast.error("Không thể tải danh sách sản phẩm");
+      } finally {
+        setLoadingFoods(false);
+      }
+    };
+
+    const fetchCombos = async () => {
+      try {
+        const res = await getAllCombos();
+        setCombos(Array.isArray(res.data.Data) ? res.data.Data : []);
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách combo:", err);
+      } finally {
+        setLoadingCombos(false);
+      }
+    };
+
     fetchFoods();
     fetchCombos();
   }, []);
 
-  const fetchFoods = async () => {
-    try {
-      const res = await getAllFoods();
-      setFoods(res.data.Data || []);
-    } catch (err) {
-      console.error("Lỗi khi lấy danh sách món ăn:", err);
-    } finally {
-      setLoadingFoods(false);
-    }
-  };
+  const handleAddToCart = async (item, type = "food") => {
+  try {
+    const data =
+      type === "food"
+        ? { FoodID: item.Id, Quantity: 1 } // phải viết hoa như backend
+        : { ComboID: item.Id, Quantity: 1 };
 
-  const fetchCombos = async () => {
-    try {
-      const res = await getAllCombos();
-      setCombos(res.data.Data || []);
-    } catch (err) {
-      console.error("Lỗi khi lấy danh sách combo:", err);
-    } finally {
-      setLoadingCombos(false);
-    }
-  };
+    const response = await CartService.addItemToCart(data);
+    toast.success("✅ Đã thêm vào giỏ hàng!");
+    console.log("Thêm thành công:", response);
+  } catch (error) {
+    console.error("❌ Lỗi khi thêm giỏ hàng:", error);
+    toast.error("❌ Không thể thêm vào giỏ hàng");
+  }
+};
+
+
+
 
   return (
     <div className="product-list-bg">
@@ -98,11 +118,7 @@ export default function ProductList() {
             {bannerImages.map((src, index) => (
               <div key={index}>
                 <div className="banner-image-wrapper">
-                  <img
-                    src={src}
-                    alt={`Banner ${index}`}
-                    className="banner-image"
-                  />
+                  <img src={src} alt={`Banner ${index}`} className="banner-image" />
                   <div className="banner-overlay">
                     <div className="banner-text">
                       <h1>Chào mừng đến với MCFOOD</h1>
@@ -124,10 +140,10 @@ export default function ProductList() {
 
           {loadingFoods ? (
             <div className="loading-wrapper">
-              <div className="spinner-border text-dark" style={{ width: '3rem', height: '3rem' }} />
+              <div className="spinner-border text-dark" style={{ width: "3rem", height: "3rem" }} />
               <p>Đang tải món ăn...</p>
             </div>
-          ) : foods.length === 0 ? (
+          ) : !Array.isArray(foods) || foods.length === 0 ? (
             <div className="empty-alert food-alert">
               <h4>Không có món ăn nào.</h4>
             </div>
@@ -135,10 +151,7 @@ export default function ProductList() {
             <div className="row g-4">
               {foods.map((food) => (
                 <div className="col-lg-3 col-md-4 col-sm-6" key={food.Id}>
-                  <div 
-                    className="product-card"
-                    onClick={() => navigate(`/foods/${food.Id}`)}
-                  >
+                  <div className="product-card" onClick={() => navigate(`/foods/${food.Id}`)}>
                     <div className="product-image-wrapper">
                       <img
                         src={`${ImageAPIUrl}${food.ImageUrl}`}
@@ -154,7 +167,15 @@ export default function ProductList() {
                       <div className="product-price">
                         <span>{food.Price?.toLocaleString()} ₫</span>
                       </div>
-                      <button className="btn-add">Thêm vào giỏ</button>
+                      <button
+                        className="btn-add"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(food, "food"); // 👈 thêm type rõ ràng
+                        }}
+                      >
+                        Thêm vào giỏ
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -172,10 +193,10 @@ export default function ProductList() {
 
           {loadingCombos ? (
             <div className="loading-wrapper">
-              <div className="spinner-border text-dark" style={{ width: '3rem', height: '3rem' }} />
+              <div className="spinner-border text-dark" style={{ width: "3rem", height: "3rem" }} />
               <p>Đang tải combo...</p>
             </div>
-          ) : combos.length === 0 ? (
+          ) : !Array.isArray(combos) || combos.length === 0 ? (
             <div className="empty-alert combo-alert">
               <h4>Hiện chưa có combo.</h4>
             </div>
@@ -183,10 +204,7 @@ export default function ProductList() {
             <div className="row g-4">
               {combos.map((combo) => (
                 <div className="col-lg-4 col-md-6" key={combo.Id}>
-                  <div 
-                    className="product-card combo-card"
-                    onClick={() => navigate(`/combos/${combo.Id}`)}
-                  >
+                  <div className="product-card combo-card" onClick={() => navigate(`/combos/${combo.Id}`)}>
                     <div className="product-image-wrapper">
                       <img
                         src={`${ImageAPIUrl}${combo.ImageUrl}`}
@@ -202,7 +220,15 @@ export default function ProductList() {
                       <div className="product-price">
                         <span>{combo.Price?.toLocaleString()} ₫</span>
                       </div>
-                      <button className="btn-combo">Thêm combo</button>
+                      <button
+                        className="btn-combo"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(combo, "combo"); // 👈 combo
+                        }}
+                      >
+                        Thêm combo
+                      </button>
                     </div>
                   </div>
                 </div>

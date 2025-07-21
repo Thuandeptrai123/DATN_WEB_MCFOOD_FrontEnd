@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getComboById } from "../api/CombosService";
-// import "./ComboDetail.css";
-import "../Styles/ComboDetail.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
+import CartService from "../api/cartService"; // ✅ Import service thêm vào giỏ hàng
+import { toast } from "react-toastify";       // ✅ Import toast
+import "../Styles/ComboDetail.css";
 
 export default function ComboDetail() {
   const { id } = useParams();
@@ -32,6 +33,21 @@ export default function ComboDetail() {
       setQuantity((prev) => prev + 1);
     } else if (type === "decrease" && quantity > 1) {
       setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleAddComboToCart = async () => {
+    try {
+      const data = {
+        comboId: combo.Id,
+        quantity: quantity,
+      };
+      const response = await CartService.addItemToCart(data); // ✅ Gọi API
+      console.log("✅ Combo đã thêm:", response);
+      toast.success("Đã thêm combo vào giỏ hàng!");
+    } catch (error) {
+      console.error("❌ Lỗi khi thêm combo vào giỏ:", error);
+      toast.error("Thêm combo thất bại!");
     }
   };
 
@@ -121,8 +137,8 @@ export default function ComboDetail() {
               </div>
 
               <div className="cd-action-buttons">
-                <button className="cd-btn-add">🛒 Thêm combo</button>
-                <button onClick={() => navigate('/productlist')} className="cd-btn-back-outline">← Quay lại</button>
+                <button className="cd-btn-add" onClick={handleAddComboToCart}>🛒 Thêm combo</button>
+                <button onClick={() => navigate('/')} className="cd-btn-back-outline">← Quay lại</button>
               </div>
             </div>
           </div>

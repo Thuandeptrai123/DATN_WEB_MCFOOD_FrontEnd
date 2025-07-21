@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFoodById } from "../api/foodService";
-// import "./FoodDetail.css";
-import "../Styles/FoodDetail.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
+import CartService from "../api/cartService"; // ✅ thêm dòng này
+import { toast } from "react-toastify"; // ✅ thêm dòng này
+import "../Styles/FoodDetail.css";
 
 export default function FoodDetail() {
   const { id } = useParams();
@@ -32,6 +33,21 @@ export default function FoodDetail() {
       setQuantity((prev) => prev + 1);
     } else if (type === "decrease" && quantity > 1) {
       setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const data = {
+        foodId: food.Id,
+        quantity: quantity,
+      };
+      const response = await CartService.addItemToCart(data);
+      console.log("✅ Thêm vào giỏ hàng:", response);
+      toast.success("Đã thêm vào giỏ hàng!");
+    } catch (error) {
+      console.error("❌ Lỗi thêm giỏ hàng:", error);
+      toast.error("Thêm vào giỏ hàng thất bại!");
     }
   };
 
@@ -115,7 +131,7 @@ export default function FoodDetail() {
               </div>
 
               <div className="fd-action-buttons">
-                <button className="fd-btn-add">🛒 Thêm vào giỏ hàng</button>
+                <button className="fd-btn-add" onClick={handleAddToCart}>🛒 Thêm vào giỏ hàng</button>
                 <button className="fd-btn-like">❤️</button>
               </div>
             </div>
@@ -124,7 +140,7 @@ export default function FoodDetail() {
 
         {/* Nút quay lại */}
         <div className="fd-back-wrapper">
-          <button onClick={() => navigate("/productlist")} className="fd-btn-back-outline">
+          <button onClick={() => navigate("/")} className="fd-btn-back-outline">
             ← Quay lại thực đơn
           </button>
         </div>
