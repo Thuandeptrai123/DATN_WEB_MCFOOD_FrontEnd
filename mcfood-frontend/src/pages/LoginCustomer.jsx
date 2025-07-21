@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { login_customer } from "../api/LoginApi";
 import { loginSuccess } from "../store/authSlice";
 import "../Styles/Login.css";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [form, setForm] = useState({ UserName: "", Password: "" });
@@ -39,7 +40,8 @@ export default function Login() {
       const result = res.data;
 
       if (result.ErrorCode === 0 && result.Data) {
-        alert("✅ Đăng nhập thành công!");
+        // alert("✅ Đăng nhập thành công!");
+        toast.success("Đăng nhập thành công!");
 
         // dispatch(
         //   loginSuccess({
@@ -97,7 +99,6 @@ export default function Login() {
           <div className="form-group">
             <label>Tên đăng nhập</label>
             <div className="input-icon">
-              <Mail size={18} />
               <input
                 type="text"
                 name="UserName"
@@ -115,7 +116,6 @@ export default function Login() {
           <div className="form-group">
             <label>Mật khẩu</label>
             <div className="input-icon">
-              <Lock size={18} />
               <input
                 type={showPassword ? "text" : "password"}
                 name="Password"
@@ -160,6 +160,21 @@ export default function Login() {
               Chưa có tài khoản?{" "}
               <button type="button" onClick={() => navigate("/register")}>
                 Đăng kí ngay
+              </button>
+              <br />
+              <button
+                className="btn1"
+                style={{
+                  background: "none",
+                  color: "#000000ff",
+                  border: "none",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  textDecoration: "none"
+                }}
+                onClick={() => navigate("/")}
+              >
+                Về trang chủ
               </button>
             </p>
           </div>

@@ -303,6 +303,21 @@ if (result.ErrorCode === 200 || result.ErrorCode === 0) {
               <button type="button" onClick={() => navigate("/login")}>
                 Đăng nhập ngay
               </button>
+              <br />
+              <button
+                className="btn1"
+                style={{
+                  background: "none",
+                  color: "#000000ff",
+                  border: "none",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  textDecoration: "none"
+                }}
+                onClick={() => navigate("/")}
+              >
+                Về trang chủ
+              </button>
             </p>
           </div>
         </form>

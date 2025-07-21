@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import userApi from "../api/userService";
 import "../Styles/ProfilePage.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; 
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const navigate = useNavigate();
 
   // Lấy token trực tiếp từ localStorage
   const token = localStorage.getItem("token");
@@ -27,21 +30,27 @@ export default function ProfilePage() {
             address: data.Address,
             phoneNumbers: data.PhoneNumbers,
             avatar: data.ProfileImage
-                ? `https://localhost:7233${data.ProfileImage}`
-                : "https://i.pravatar.cc/150",
-
+              ? `https://localhost:7233${data.ProfileImage}`
+              : "https://i.pravatar.cc/150",
           });
         } else {
           console.error("❌ API trả về lỗi hoặc thiếu Data:", res);
         }
+      } else {
+        navigate("/401"); // 👈 Nếu không có token thì chuyển luôn
       }
     } catch (error) {
-      console.error("❌ Lỗi lấy profile:", error);
+      if (error.response?.status === 401) {
+        navigate("/401"); // 👈 Token sai/hết hạn thì chuyển
+      } else {
+        console.error("❌ Lỗi lấy profile:", error);
+      }
     }
   };
 
   fetchProfile();
-}, [token]);
+}, [token, navigate]);
+
 
 
   const handleChange = (e) => {
@@ -70,7 +79,8 @@ export default function ProfilePage() {
 
       await userApi.updateProfile(formData, token);
 
-      alert("✅ Cập nhật thành công!");
+      // alert("✅ Cập nhật thành công!");
+      toast.success("Cập nhật thành công!");
       setShowEdit(false);
 
       // Reload profile sau update
@@ -102,7 +112,7 @@ export default function ProfilePage() {
       <h2>Thông tin cá nhân</h2>
       <div className="avatar-section">
         <img src={profile.avatar} alt="Avatar" className="profile-avatar-large" />
-        <label htmlFor="file-upload" className="update-btn">Update Picture</label>
+        {/* <label htmlFor="file-upload" className="update-btn">Update Picture</label> */}
         <input
           type="file"
           id="file-upload"

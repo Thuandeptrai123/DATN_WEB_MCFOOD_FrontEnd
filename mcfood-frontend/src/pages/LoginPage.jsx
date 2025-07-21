@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, UserCheck } from "lucide-react";
-import "../Styles/Login.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
+import "../Styles/Login.css";
 import { useNavigate } from "react-router-dom";
+import { login_customer } from "../api/authService"; // 👈 Thêm dòng này
+import { toast } from "react-toastify"; 
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,6 +11,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState(""); // 👈 Để hiển thị lỗi nếu có
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,10 +22,24 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data gửi lên:", formData);
-    // Gọi API login ở đây
+    setError("");
+    try {
+      console.log("Data gửi lên:", formData);
+      const res = await login_customer(formData);
+      console.log("✅ Đăng nhập thành công:", res.data);
+
+      if (res.data && res.data.data && res.data.data.customerId) {
+        localStorage.setItem("customerId", res.data.data.customerId); // ✅ Lưu customerId
+        navigate("/"); // ✅ Chuyển hướng sau khi login, bạn có thể dùng: navigate("/cart") nếu muốn
+      } else {
+        setError("Đăng nhập thất bại. Vui lòng thử lại.");
+      }
+    } catch (err) {
+      console.error("❌ Lỗi đăng nhập:", err);
+      setError("Sai email hoặc mật khẩu.");
+    }
   };
 
   const handleRegisterRedirect = () => {
@@ -50,6 +67,7 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Nhập email"
+                required
               />
             </div>
           </div>
@@ -63,6 +81,7 @@ export default function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Nhập mật khẩu"
+                required
               />
               <button
                 type="button"
@@ -73,6 +92,12 @@ export default function Login() {
               </button>
             </div>
           </div>
+
+          {error && (
+            <div className="error-message" style={{ color: "red", marginBottom: "10px" }}>
+              {error}
+            </div>
+          )}
 
           <button type="submit" className="btn-primary">Đăng nhập</button>
 
