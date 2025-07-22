@@ -10,6 +10,7 @@ import cartService from "../api/cartService"; // ✅ sửa lại đúng import
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import CartService from "../api/cartService";
+import { useCart } from "../Contexts/CartContext"; 
 
 
 export default function ProductList() {
@@ -20,6 +21,7 @@ export default function ProductList() {
   const ImageAPIUrl = "https://localhost:7233";
   const navigate = useNavigate();
   const customer = useSelector((state) => state.auth.customer);
+  const { addItem } = useCart();
 
   const bannerImages = [
     "/pic/banner1.jpg",
@@ -90,22 +92,36 @@ export default function ProductList() {
     fetchCombos();
   }, []);
 
+//   const handleAddToCart = async (item, type = "food") => {
+//   try {
+//     const data =
+//       type === "food"
+//         ? { FoodID: item.Id, Quantity: 1 } // phải viết hoa như backend
+//         : { ComboID: item.Id, Quantity: 1 };
+
+//     const response = await CartService.addItemToCart(data);
+//     toast.success("✅ Đã thêm vào giỏ hàng!");
+//     // window.location.reload(); 
+//     console.log("Thêm thành công:", response);
+//   } catch (error) {
+//     console.error("❌ Lỗi khi thêm giỏ hàng:", error);
+//     toast.error("❌ Không thể thêm vào giỏ hàng");
+//   }
+// };
   const handleAddToCart = async (item, type = "food") => {
-  try {
-    const data =
-      type === "food"
-        ? { FoodID: item.Id, Quantity: 1 } // phải viết hoa như backend
-        : { ComboID: item.Id, Quantity: 1 };
+    try {
+      const data =
+        type === "food"
+          ? { FoodID: item.Id, Quantity: 1 }
+          : { ComboID: item.Id, Quantity: 1 };
 
-    const response = await CartService.addItemToCart(data);
-    toast.success("✅ Đã thêm vào giỏ hàng!");
-    console.log("Thêm thành công:", response);
-  } catch (error) {
-    console.error("❌ Lỗi khi thêm giỏ hàng:", error);
-    toast.error("❌ Không thể thêm vào giỏ hàng");
-  }
-};
-
+      await addItem(data); // dùng context thay vì gọi API riêng
+      toast.success("✅ Đã thêm vào giỏ hàng!");
+    } catch (error) {
+      console.error("❌ Lỗi khi thêm giỏ hàng:", error);
+      toast.error("❌ Không thể thêm vào giỏ hàng");
+    }
+  };
 
 
 

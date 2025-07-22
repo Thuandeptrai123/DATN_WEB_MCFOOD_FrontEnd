@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFoodById } from "../api/foodService";
-import CartService from "../api/cartService"; // ✅ thêm dòng này
-import { toast } from "react-toastify"; // ✅ thêm dòng này
+import { toast } from "react-toastify";
 import "../Styles/FoodDetail.css";
+import { useCart } from "../Contexts/CartContext"; // ✅ Đúng context
 
 export default function FoodDetail() {
   const { id } = useParams();
@@ -12,6 +12,7 @@ export default function FoodDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const ImageAPIUrl = "https://localhost:7233";
+  const { addItem } = useCart(); // ✅ Lấy addItem từ context
 
   useEffect(() => {
     fetchFood();
@@ -42,9 +43,9 @@ export default function FoodDetail() {
         foodId: food.Id,
         quantity: quantity,
       };
-      const response = await CartService.addItemToCart(data);
-      console.log("✅ Thêm vào giỏ hàng:", response);
+      await addItem(data); // ✅ Cập nhật cart qua context
       toast.success("Đã thêm vào giỏ hàng!");
+      // ❌ KHÔNG cần reload
     } catch (error) {
       console.error("❌ Lỗi thêm giỏ hàng:", error);
       toast.error("Thêm vào giỏ hàng thất bại!");

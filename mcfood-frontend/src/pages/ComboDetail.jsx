@@ -45,6 +45,7 @@ export default function ComboDetail() {
       const response = await CartService.addItemToCart(data); // ✅ Gọi API
       console.log("✅ Combo đã thêm:", response);
       toast.success("Đã thêm combo vào giỏ hàng!");
+      // window.location.reload(); 
     } catch (error) {
       console.error("❌ Lỗi khi thêm combo vào giỏ:", error);
       toast.error("Thêm combo thất bại!");
