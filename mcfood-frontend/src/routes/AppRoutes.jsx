@@ -20,49 +20,45 @@ import ComboDetail from "../pages/ComboDetail";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPass from "../pages/ForgotPass";
 import ConfirmEmail from "../pages/ConfirmEmail";
-import UnauthorizedPage  from "../pages/401";
+import UnauthorizedPage from "../pages/401";
+import PageNotFound from "../pages/PageNotFound";
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
-        {/* Không dùng layout */}
+        {/* Các route không dùng layout */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/401" element={<UnauthorizedPage  />} />
+        <Route path="/401" element={<UnauthorizedPage />} />
 
-        {/* Các route còn lại dùng layout */}
-        <Route
-          path="*"
-          element={
-            <MainLayout>
-              <Routes>
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/orders" element={<OrderHistory />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/products" element={<ProductManagement />} />
-                <Route path="/foodtype" element={<FoodTypeList />} />
-                <Route path="/createfoodtype" element={<CreateFoodType />} />
-                <Route path="/editfoodtype/:id" element={<EditFoodType />} />
-                <Route path="/foods" element={<FoodList />} />
-                <Route path="/" element={<ProductList />} />
-                <Route path="/foods/:id" element={<FoodDetail />} />
-                <Route path="/combos/:id" element={<ComboDetail />} />
-                <Route path="/change-password" element={<ChangePasswordPage />} />
-                <Route path="/forgot-password" element={<ForgotPass />} />
-              </Routes>
-            </MainLayout>
-          }
-        />
+        {/* Các route dùng layout chung */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<ProductList />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/products" element={<ProductManagement />} />
+          <Route path="/foodtype" element={<FoodTypeList />} />
+          <Route path="/createfoodtype" element={<CreateFoodType />} />
+          <Route path="/editfoodtype/:id" element={<EditFoodType />} />
+          <Route path="/foods" element={<FoodList />} />
+          <Route path="/foods/:id" element={<FoodDetail />} />
+          <Route path="/combos/:id" element={<ComboDetail />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
+          <Route path="/forgot-password" element={<ForgotPass />} />
+          <Route path="/confirm-email" element={<ConfirmEmail />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
       </Routes>
     </Router>
   );
 }
+
 
 
 
