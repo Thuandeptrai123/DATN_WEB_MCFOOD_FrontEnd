@@ -61,6 +61,7 @@ export default function Login() {
 
 
         navigate("/");
+        window.location.reload();
       } else {
         setServerError(result.Message || "Đăng nhập thất bại!");
       }
