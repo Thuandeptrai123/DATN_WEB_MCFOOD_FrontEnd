@@ -1,30 +1,33 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Outlet } from "react-router-dom";
 
-export default function MainLayout({ children }) {
+export default function MainLayout() {
   return (
     <>
       <style>
         {`
-        html, body, #root {
-          height: 100%;
-          margin: 0;
-        }
+          html, body, #root {
+            height: 100%;
+            margin: 0;
+          }
 
-        .layout-wrapper {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh; /* Chiều cao tối thiểu = chiều cao viewport */
-        }
+          .layout-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+          }
 
-        .layout-wrapper main {
-          flex: 1; /* Phần main sẽ chiếm hết khoảng trống còn lại, đẩy footer xuống dưới */
-        }
+          main {
+            flex: 1;
+          }
         `}
       </style>
       <div className="layout-wrapper">
         <Header />
-        <main style={{ padding: "20px" }}>{children}</main>
+        <main>
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </>
