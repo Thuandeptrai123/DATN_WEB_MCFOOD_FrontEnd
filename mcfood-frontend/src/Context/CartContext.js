@@ -13,7 +13,7 @@ export const CartProvider = ({ children }) => {
       const data = await CartService.getUserCart();
       setCart(data);
     } catch (error) {
-      console.error("Lỗi khi lấy giỏ hàng:", error);
+      // console.error("Lỗi khi lấy giỏ hàng:", error);
     }
   };
 
