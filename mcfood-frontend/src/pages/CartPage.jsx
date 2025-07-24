@@ -4,13 +4,17 @@ import "../Styles/CartPage.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useCart } from "../Contexts/CartContext";
+import { useCart } from "../Context/CartContext";
 
 const CartPage = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cart, fetchCart, updateItem, removeItem, clearCart } = useCart();
+
+  const handleGoToCheckout = () => {
+    navigate("/checkout");
+  };
 
   // GỌI fetchCart nếu chưa có cart (khi vừa mở trang Cart)
   useEffect(() => {
@@ -214,7 +218,7 @@ const CartPage = () => {
                     </span>
                   </div>
                   <div className="d-grid gap-2">
-                    <button className="btn btn-success btn-lg fw-semibold">
+                    <button className="btn btn-success btn-lg fw-semibold" onClick={handleGoToCheckout}>
                       <i className="fas fa-credit-card me-2"></i>
                       Thanh toán
                     </button>

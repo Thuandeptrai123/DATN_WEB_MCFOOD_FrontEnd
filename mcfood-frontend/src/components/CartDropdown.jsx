@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useCart } from "../Contexts/CartContext"; // ✅
+import { useCart } from "../Context/CartContext"; // ✅
 import "./CartDropdown.css";
 
 const CartDropdown = () => {
