@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 import "./Header.css";
 import CartDropdown from "./CartDropdown";
-import { useCart } from "../Contexts/CartContext"; // ✅ Dùng context
+import { useCart } from "../Context/CartContext"; // ✅ Dùng context
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
