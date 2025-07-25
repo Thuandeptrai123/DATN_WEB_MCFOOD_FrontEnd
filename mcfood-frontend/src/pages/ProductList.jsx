@@ -10,7 +10,7 @@ import cartService from "../api/cartService"; // ✅ sửa lại đúng import
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import CartService from "../api/cartService";
-import { useCart } from "../Contexts/CartContext"; 
+import { useCart } from "../Context/CartContext"; 
 
 
 export default function ProductList() {

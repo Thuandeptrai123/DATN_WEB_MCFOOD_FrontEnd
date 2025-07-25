@@ -4,6 +4,7 @@ import { getComboById } from "../api/CombosService";
 import CartService from "../api/cartService"; // ✅ Import service thêm vào giỏ hàng
 import { toast } from "react-toastify";       // ✅ Import toast
 import "../Styles/ComboDetail.css";
+import { useCart } from "../Context/CartContext"; // ✅ Sử dụng context để quản lý giỏ hàng
 
 export default function ComboDetail() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function ComboDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const ImageAPIUrl = "https://localhost:7233";
+  const { addItem } = useCart();
 
   useEffect(() => {
     fetchCombo();
@@ -42,8 +44,9 @@ export default function ComboDetail() {
         comboId: combo.Id,
         quantity: quantity,
       };
-      const response = await CartService.addItemToCart(data); // ✅ Gọi API
-      console.log("✅ Combo đã thêm:", response);
+      // const response = await CartService.addItemToCart(data); // ✅ Gọi API
+      await addItem(data);
+      // console.log("✅ Combo đã thêm:", response);
       toast.success("Đã thêm combo vào giỏ hàng!");
       // window.location.reload(); 
     } catch (error) {

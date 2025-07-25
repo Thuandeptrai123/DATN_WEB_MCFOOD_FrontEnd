@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getFoodById } from "../api/foodService";
 import { toast } from "react-toastify";
 import "../Styles/FoodDetail.css";
-import { useCart } from "../Contexts/CartContext"; // ✅ Đúng context
+import { useCart } from "../Context/CartContext"; // ✅ Đúng context
 
 export default function FoodDetail() {
   const { id } = useParams();
