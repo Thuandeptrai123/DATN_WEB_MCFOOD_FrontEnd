@@ -22,14 +22,15 @@ import ForgotPass from "../pages/ForgotPass";
 import ConfirmEmail from "../pages/ConfirmEmail";
 import UnauthorizedPage from "../pages/401";
 import PageNotFound from "../pages/PageNotFound";
+import GuestRoute from "./GuestRoute"; 
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
         {/* Các route không dùng layout */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route  path="/login"  element={<GuestRoute> <LoginPage /></GuestRoute>}/>
+        <Route path="/register" element={<GuestRoute> <RegisterPage /></GuestRoute>}/>
         <Route path="/401" element={<UnauthorizedPage />} />
 
         {/* Các route dùng layout chung */}
@@ -38,7 +39,7 @@ export default function AppRoutes() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
+          {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
           <Route path="/orders" element={<OrderHistory />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
@@ -53,6 +54,9 @@ export default function AppRoutes() {
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/confirm-email" element={<ConfirmEmail />} />
           <Route path="*" element={<PageNotFound />} />
+          {/* <Route path="/checkout" element={<CheckoutPage customerId={user.id} />} /> */}
+          <Route path="/checkout" element={<CheckoutPage />} />
+
         </Route>
       </Routes>
     </Router>
