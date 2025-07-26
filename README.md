@@ -23,16 +23,16 @@
 
 ### ⚡ Cách cài đặt & chạy dự án
 
-#### 1️⃣ Clone repository
+#### 1️⃣ Clone repository với SSH
 
 ```bash
-git clone <link-repo-cua-ban>
+git clone git@github.com:Thuandeptrai123/DATN_WEB_MCFOOD_FrontEnd.git
 ```
 
 #### 2️⃣ Di chuyển vào thư mục dự án
 
 ```bash
-cd <ten-thu-muc-du-an>
+cd mcfood-frontend
 ```
 
 #### 3️⃣ Cài đặt dependencies
@@ -50,6 +50,6 @@ npm install
 npm start
 ```
 
-Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:3000](http://localhost:3000)
+Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:3001](http://localhost:3000)
 
 ---
