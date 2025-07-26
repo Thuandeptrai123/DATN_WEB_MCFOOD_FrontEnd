@@ -40,15 +40,6 @@ cd <ten-thu-muc-du-an>
 ```bash
 npm install
 ```
-```
-npm install react-slick slick-carousel
-```
-```
-npm install react-icons
-```
-```
-npm install lucide-react
-```
 ⚠️ **Lưu ý:**  
 - Thư mục `node_modules` **không được push** lên Git.  
 - Khi clone về máy, bắt buộc phải chạy `npm install` để tải các thư viện được khai báo trong `package.json` và `package-lock.json`.
