@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CartService from "../api/cartService";
 import "../Styles/CartPage.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";  
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../Context/CartContext";
@@ -11,10 +11,27 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cart, fetchCart, updateItem, removeItem, clearCart } = useCart();
+  const user = useSelector((state) => state.auth.user);  // ✅ dùng đúng state
+  const token = localStorage.getItem("token");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  const handleGoToCheckout = () => {
-    navigate("/checkout");
+  const handleCheckout = () => {
+    if (!token) {
+      toast.warn("Vui lòng đăng nhập để thanh toán!");
+      return navigate("/login");
+    }
+
+    if (!cart?.Items || cart.Items.length === 0) {
+      toast.error("Giỏ hàng của bạn đang trống!");
+      return;
+    }
+
+    setCheckoutLoading(true);
+    setTimeout(() => {
+      navigate("/checkout");
+    }, 500); // Delay nhỏ để cảm giác mượt hơn
   };
+
 
   // GỌI fetchCart nếu chưa có cart (khi vừa mở trang Cart)
   useEffect(() => {
@@ -218,10 +235,32 @@ const CartPage = () => {
                     </span>
                   </div>
                   <div className="d-grid gap-2">
-                    <button className="btn btn-success btn-lg fw-semibold" onClick={handleGoToCheckout}>
+                    {/* <button className="btn btn-success btn-lg fw-semibold" onClick={handleCheckout} >
                       <i className="fas fa-credit-card me-2"></i>
                       Thanh toán
+                    </button> */}
+                    <button
+                      className="btn btn-primary btn-lg fw-semibold d-flex align-items-center justify-content-center"
+                      onClick={handleCheckout}
+                      disabled={checkoutLoading}
+                    >
+                      {checkoutLoading ? (
+                        <>
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          Đang chuyển...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-arrow-right me-2"></i>
+                          Tiếp tục đến thanh toán
+                        </>
+                      )}
                     </button>
+
                     <button
                       className="btn btn-custom-clear"
                       onClick={handleClearCart}
