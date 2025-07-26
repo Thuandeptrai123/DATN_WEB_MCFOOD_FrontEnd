@@ -30,6 +30,9 @@ export default function Header() {
     closeDropdown();
     window.location.reload();
   };
+  const handleClickHistory = () => {
+    navigate("/order-history");
+  }
 
   return (
     <header className="header">
@@ -92,7 +95,7 @@ export default function Header() {
                 <button className="dropdown-item logout-btn" onClick={handleLogout}>
                   🔓 Đăng xuất
                 </button>
-                <button className="dropdown-item logout-btn">📦 Lịch sử</button>
+                <button className="dropdown-item logout-btn" onClick={handleClickHistory}>📦 Lịch sử</button>
               </div>
             )}
           </div>
