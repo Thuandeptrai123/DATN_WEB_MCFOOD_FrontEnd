@@ -40,7 +40,6 @@ export default function AppRoutes() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
           {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
-          <Route path="/orders" element={<OrderHistory />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/products" element={<ProductManagement />} />
@@ -56,6 +55,7 @@ export default function AppRoutes() {
           <Route path="*" element={<PageNotFound />} />
           {/* <Route path="/checkout" element={<CheckoutPage customerId={user.id} />} /> */}
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-history" element={<OrderHistory />} />
 
         </Route>
       </Routes>
