@@ -4,7 +4,6 @@ import { Eye, EyeOff, User, Mail, MapPin, Lock, UserCheck } from "lucide-react";
 import "../Styles/Register.css"; // Đảm bảo đường dẫn đúng với cấu trúc thư mục của bạn
 import { useNavigate } from "react-router-dom";
 
-
 export default function Register() {
   const [formData, setFormData] = useState({
     userName: "",
@@ -77,7 +76,6 @@ export default function Register() {
   const handleLoginRedirect = () => {
     navigate("/login");
   };
-
 
   return (
     <div className="register-container">

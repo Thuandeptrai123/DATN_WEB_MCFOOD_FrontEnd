@@ -74,9 +74,7 @@ export default function ProfilePage() {
       if (selectedFile) {
         formData.append("ProfileImage", selectedFile);
       }
-
       await userApi.updateProfile(formData, token);
-
       toast.success("Cập nhật thành công!");
       setShowEdit(false);
 

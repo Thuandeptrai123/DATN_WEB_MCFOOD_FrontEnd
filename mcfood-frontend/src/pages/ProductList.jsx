@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import CartService from "../api/cartService";
 import { useCart } from "../Context/CartContext"; 
 
-
 export default function ProductList() {
   const [foods, setFoods] = useState([]);
   const [combos, setCombos] = useState([]);
@@ -148,7 +147,6 @@ export default function ProductList() {
         }
       });
     }
-
     return filtered;
   };
 

@@ -43,12 +43,6 @@ export default function Login() {
         // alert("✅ Đăng nhập thành công!");
         toast.success("Đăng nhập thành công!");
 
-        // dispatch(
-        //   loginSuccess({
-        //     user: result.Data,
-        //     token: result.Data.Token,
-        //   })
-        // );
         dispatch(
           loginSuccess({
             user: {
@@ -59,7 +53,6 @@ export default function Login() {
           })
         );
 
-
         navigate("/");
         window.location.reload();
       } else {
@@ -69,17 +62,15 @@ export default function Login() {
       console.error("❌ Lỗi:", err);
 
       if (err.response && err.response.data) {
-  const { Message, ErrorCode, Data } = err.response.data;
-
-  if (ErrorCode === 403 && Message.includes("Email chưa được xác nhận")) {
-    setServerError("❌ Email của bạn chưa được xác nhận. Vui lòng kiểm tra hộp thư và xác nhận trước khi đăng nhập.");
-  } else {
-    setServerError(`${Message}\n${Data?.[0]?.description || "Vui lòng thử lại."}`);
-  }
-} else {
-  setServerError("Lỗi kết nối đến máy chủ!");
-}
-
+        const { Message, ErrorCode, Data } = err.response.data;
+        if (ErrorCode === 403 && Message.includes("Email chưa được xác nhận")) {
+          setServerError("❌ Email của bạn chưa được xác nhận. Vui lòng kiểm tra hộp thư và xác nhận trước khi đăng nhập.");
+        } else {
+          setServerError(`${Message}\n${Data?.[0]?.description || "Vui lòng thử lại."}`);
+        }
+      } else {
+        setServerError("Lỗi kết nối đến máy chủ!");
+      }
     }
   };
 

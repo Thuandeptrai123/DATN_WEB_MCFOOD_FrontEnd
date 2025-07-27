@@ -3,7 +3,6 @@ import invoiceService from "../api/invoiceService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import InvoiceDetailModal from "./InvoiceDetailModal";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function OrderHistory() {
   const userInfo = useSelector((state) => state.auth.user);

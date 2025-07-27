@@ -97,24 +97,26 @@ export default function Register() {
     try {
       const res = await register_customer(formDataToSend);
       const result = res.data;
-if (result.ErrorCode === 200 || result.ErrorCode === 0) {
-  alert("🎉 Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.");
-  navigate("/login");
-}
- else {
+      if (result.ErrorCode === 200 || result.ErrorCode === 0) {
+        alert("🎉 Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.");
+        navigate("/login");
+      }
+      else 
+      {
         alert(result.Message || "Đăng ký thất bại!");
       }
-    } catch (error) {
-      console.error("Lỗi khi đăng ký:", error);
-      if (error.response && error.response.data) {
-        const { ErrorCode, Message, Data } = error.response.data;
-        console.log("Chi tiết lỗi từ server:", error.response.data);
-        alert(`${Message}\n${Data?.[0]?.description || "Vui lòng kiểm tra lại."}`);
-      } else {
-        alert("Lỗi kết nối đến máy chủ!");
+    } 
+    catch (error) {
+        console.error("Lỗi khi đăng ký:", error);
+        if (error.response && error.response.data) {
+          const { ErrorCode, Message, Data } = error.response.data;
+          console.log("Chi tiết lỗi từ server:", error.response.data);
+          alert(`${Message}\n${Data?.[0]?.description || "Vui lòng kiểm tra lại."}`);
+        } else {
+          alert("Lỗi kết nối đến máy chủ!");
+        }
       }
-    }
-  };
+    };
 
   return (
     <div className="register-container">

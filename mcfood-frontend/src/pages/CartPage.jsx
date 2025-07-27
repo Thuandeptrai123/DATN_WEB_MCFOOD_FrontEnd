@@ -32,7 +32,6 @@ const CartPage = () => {
     }, 500); // Delay nhỏ để cảm giác mượt hơn
   };
 
-
   // GỌI fetchCart nếu chưa có cart (khi vừa mở trang Cart)
   useEffect(() => {
     if (!cart) {
@@ -50,7 +49,6 @@ const CartPage = () => {
       setLoading(true);
       fetchCart().finally(() => setLoading(false));
     }
-
   }, [cart, fetchCart, navigate]);
 
     const handleQuantityChange = async (cartItemId, quantity) => {
@@ -81,7 +79,6 @@ const CartPage = () => {
       }
     };
     
-
     const renderCartItem = (item) => {
     const isFood = item.FoodDetails !== null;
     const details = isFood ? item.FoodDetails : item.ComboDetails;
