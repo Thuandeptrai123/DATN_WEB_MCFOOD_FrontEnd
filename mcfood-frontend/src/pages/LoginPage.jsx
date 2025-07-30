@@ -92,13 +92,11 @@ export default function Login() {
               </button>
             </div>
           </div>
-
           {error && (
             <div className="error-message" style={{ color: "red", marginBottom: "10px" }}>
               {error}
             </div>
           )}
-
           <button type="submit" className="btn-primary">Đăng nhập</button>
 
           <div className="or-divider">
