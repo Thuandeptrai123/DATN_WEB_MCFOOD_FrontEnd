@@ -25,6 +25,11 @@ export default function ProductList() {
   const [showFoods, setShowFoods] = useState(true);
   const [showCombos, setShowCombos] = useState(true);
   
+  // Pagination states
+  const [currentFoodPage, setCurrentFoodPage] = useState(1);
+  const [currentComboPage, setCurrentComboPage] = useState(1);
+  const ITEMS_PER_PAGE = 8; // 2 hàng × 4 món = 8 món mỗi trang
+  
   const ImageAPIUrl = "https://localhost:7233";
   const navigate = useNavigate();
   const customer = useSelector((state) => state.auth.customer);
@@ -99,6 +104,12 @@ export default function ProductList() {
     fetchCombos();
   }, []);
 
+  // Reset pagination khi filter thay đổi
+  useEffect(() => {
+    setCurrentFoodPage(1);
+    setCurrentComboPage(1);
+  }, [searchTerm, priceFilter, sortBy]);
+
   // Hàm filter và search
   const filterAndSortItems = (items) => {
     let filtered = items;
@@ -153,6 +164,122 @@ export default function ProductList() {
   const filteredFoods = filterAndSortItems(foods);
   const filteredCombos = filterAndSortItems(combos);
 
+  // Pagination logic
+  const getFoodsPaginated = () => {
+    const startIndex = (currentFoodPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredFoods.slice(startIndex, endIndex);
+  };
+
+  const getCombosPaginated = () => {
+    const startIndex = (currentComboPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredCombos.slice(startIndex, endIndex);
+  };
+
+  const totalFoodPages = Math.ceil(filteredFoods.length / ITEMS_PER_PAGE);
+  const totalComboPages = Math.ceil(filteredCombos.length / ITEMS_PER_PAGE);
+
+  // Pagination component
+  const Pagination = ({ currentPage, totalPages, onPageChange, type }) => {
+    if (totalPages <= 1) return null;
+
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="pagination-wrapper">
+        <nav aria-label="Pagination">
+          <ul className="pagination justify-content-center">
+            {/* Previous button */}
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <span aria-hidden="true">&laquo; Trước</span>
+              </button>
+            </li>
+
+            {/* First page */}
+            {startPage > 1 && (
+              <>
+                <li className="page-item">
+                  <button className="page-link" onClick={() => onPageChange(1)}>
+                    1
+                  </button>
+                </li>
+                {startPage > 2 && (
+                  <li className="page-item disabled">
+                    <span className="page-link">...</span>
+                  </li>
+                )}
+              </>
+            )}
+
+            {/* Page numbers */}
+            {pageNumbers.map(number => (
+              <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+                <button
+                  className="page-link"
+                  onClick={() => onPageChange(number)}
+                >
+                  {number}
+                </button>
+              </li>
+            ))}
+
+            {/* Last page */}
+            {endPage < totalPages && (
+              <>
+                {endPage < totalPages - 1 && (
+                  <li className="page-item disabled">
+                    <span className="page-link">...</span>
+                  </li>
+                )}
+                <li className="page-item">
+                  <button className="page-link" onClick={() => onPageChange(totalPages)}>
+                    {totalPages}
+                  </button>
+                </li>
+              </>
+            )}
+
+            {/* Next button */}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <span aria-hidden="true">Sau &raquo;</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+        
+        <div className="pagination-info text-center mt-2">
+          <small className="text-muted">
+            Trang {currentPage} / {totalPages} 
+            ({type === 'food' ? filteredFoods.length : filteredCombos.length} sản phẩm)
+          </small>
+        </div>
+      </div>
+    );
+  };
+
   const handleAddToCart = async (item, type = "food") => {
     try {
       const data =
@@ -175,6 +302,8 @@ export default function ProductList() {
     setSortBy("default");
     setShowFoods(true);
     setShowCombos(true);
+    setCurrentFoodPage(1);
+    setCurrentComboPage(1);
   };
 
   return (
@@ -330,39 +459,49 @@ export default function ProductList() {
                 </button>
               </div>
             ) : (
-              <div className="row g-4">
-                {filteredFoods.map((food) => (
-                  <div className="col-lg-3 col-md-4 col-sm-6" key={food.Id}>
-                    <div className="product-card" onClick={() => navigate(`/foods/${food.Id}`)}>
-                      <div className="product-image-wrapper">
-                        <img
-                          src={`${ImageAPIUrl}${food.ImageUrl}`}
-                          alt={food.Name}
-                          className="product-image"
-                          onError={(e) => (e.target.src = "/default-food.jpg")}
-                        />
-                        <div className="product-badge">HOT</div>
-                      </div>
-                      <div className="product-content">
-                        <h5>{food.Name}</h5>
-                        <p>{food.Description}</p>
-                        <div className="product-price">
-                          <span>{food.Price?.toLocaleString()} ₫</span>
+              <>
+                <div className="row g-4">
+                  {getFoodsPaginated().map((food) => (
+                    <div className="col-lg-3 col-md-4 col-sm-6" key={food.Id}>
+                      <div className="product-card" onClick={() => navigate(`/foods/${food.Id}`)}>
+                        <div className="product-image-wrapper">
+                          <img
+                            src={`${ImageAPIUrl}${food.ImageUrl}`}
+                            alt={food.Name}
+                            className="product-image"
+                            onError={(e) => (e.target.src = "/default-food.jpg")}
+                          />
+                          <div className="product-badge">HOT</div>
                         </div>
-                        <button
-                          className="btn-add"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(food, "food"); // 👈 thêm type rõ ràng
-                          }}
-                        >
-                          Thêm vào giỏ
-                        </button>
+                        <div className="product-content">
+                          <h5>{food.Name}</h5>
+                          <p>{food.Description}</p>
+                          <div className="product-price">
+                            <span>{food.Price?.toLocaleString()} ₫</span>
+                          </div>
+                          <button
+                            className="btn-add"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(food, "food");
+                            }}
+                          >
+                            Thêm vào giỏ
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                
+                {/* Food Pagination */}
+                <Pagination
+                  currentPage={currentFoodPage}
+                  totalPages={totalFoodPages}
+                  onPageChange={setCurrentFoodPage}
+                  type="food"
+                />
+              </>
             )}
           </section>
         )}
@@ -392,45 +531,55 @@ export default function ProductList() {
                 </button>
               </div>
             ) : (
-              <div className="row g-4">
-                {filteredCombos.map((combo) => (
-                  <div className="col-lg-4 col-md-6" key={combo.Id}>
-                    <div className="product-card combo-card" onClick={() => navigate(`/combos/${combo.Id}`)}>
-                      <div className="product-image-wrapper">
-                        <img
-                          src={`${ImageAPIUrl}${combo.ImageUrl}`}
-                          alt={combo.Name}
-                          className="product-image"
-                          onError={(e) => (e.target.src = "/default-combo.jpg")}
-                        />
-                        <div className="combo-badge">COMBO</div>
-                      </div>
-                      <div className="product-content">
-                        <h5>{combo.Name}</h5>
-                        <p>{combo.Description}</p>
-                        <div className="product-price">
-                          <span>{combo.Price?.toLocaleString()} ₫</span>
+              <>
+                <div className="row g-4">
+                  {getCombosPaginated().map((combo) => (
+                    <div className="col-lg-4 col-md-6" key={combo.Id}>
+                      <div className="product-card combo-card" onClick={() => navigate(`/combos/${combo.Id}`)}>
+                        <div className="product-image-wrapper">
+                          <img
+                            src={`${ImageAPIUrl}${combo.ImageUrl}`}
+                            alt={combo.Name}
+                            className="product-image"
+                            onError={(e) => (e.target.src = "/default-combo.jpg")}
+                          />
+                          <div className="combo-badge">COMBO</div>
                         </div>
-                        <button
-                          className="btn-combo"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(combo, "combo"); // 👈 combo
-                          }}
-                        >
-                          Thêm combo
-                        </button>
+                        <div className="product-content">
+                          <h5>{combo.Name}</h5>
+                          <p>{combo.Description}</p>
+                          <div className="product-price">
+                            <span>{combo.Price?.toLocaleString()} ₫</span>
+                          </div>
+                          <button
+                            className="btn-combo"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(combo, "combo");
+                            }}
+                          >
+                            Thêm combo
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                
+                {/* Combo Pagination */}
+                <Pagination
+                  currentPage={currentComboPage}
+                  totalPages={totalComboPages}
+                  onPageChange={setCurrentComboPage}
+                  type="combo"
+                />
+              </>
             )}
           </section>
         )}
       </div>
 
-      {/* Thêm CSS cho search và filter */}
+      {/* Thêm CSS cho search và filter + pagination */}
       <style jsx>{`
         .search-filter-section {
           background: rgba(255, 255, 255, 0.9);
@@ -501,6 +650,65 @@ export default function ProductList() {
           transition: all 0.3s ease;
         }
 
+        /* Pagination Styles */
+        .pagination-wrapper {
+          margin: 30px 0;
+          padding: 20px 0;
+        }
+
+        .pagination {
+          margin-bottom: 10px;
+        }
+
+        .page-link {
+          border: 2px solid #e9ecef;
+          color: #495057;
+          padding: 8px 16px;
+          margin: 0 2px;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          background: white;
+        }
+
+        .page-link:hover {
+          background-color: #007bff;
+          border-color: #007bff;
+          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .page-link:focus {
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .page-item.active .page-link {
+          background-color: #007bff;
+          border-color: #007bff;
+          color: white;
+          font-weight: bold;
+          transform: scale(1.1);
+        }
+
+        .page-item.disabled .page-link {
+          color: #6c757d;
+          background-color: #f8f9fa;
+          border-color: #dee2e6;
+          cursor: not-allowed;
+        }
+
+        .page-item.disabled .page-link:hover {
+          transform: none;
+          box-shadow: none;
+        }
+
+        .pagination-info {
+          color: #6c757d;
+          font-size: 14px;
+        }
+
+        /* Responsive Pagination */
         @media (max-width: 768px) {
           .search-filter-section {
             padding: 15px;
@@ -510,6 +718,29 @@ export default function ProductList() {
             flex-direction: column;
             gap: 10px;
             align-items: flex-start;
+          }
+
+          .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .page-link {
+            padding: 6px 12px;
+            font-size: 14px;
+            margin: 1px;
+          }
+
+          .pagination-wrapper {
+            margin: 20px 0;
+            padding: 15px 0;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .page-link {
+            padding: 5px 8px;
+            font-size: 12px;
           }
         }
       `}</style>
