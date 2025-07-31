@@ -5,7 +5,6 @@ import CartService from "../api/cartService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useCart } from "../Context/CartContext";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
