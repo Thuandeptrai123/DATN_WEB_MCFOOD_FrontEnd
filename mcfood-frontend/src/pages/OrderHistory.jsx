@@ -261,9 +261,9 @@ export default function OrderHistory() {
                       <option value="Pending">Chờ xử lý</option>
                       <option value="Processing">Đang xử lý</option>
                       <option value="Paid">Đã thanh toán</option>
-                      <option value="Delivered">Đã giao</option>
+                      {/* <option value="Delivered">Đã giao</option> */}
                       <option value="Cancelled">Đã hủy</option>
-                    </select>
+                    </select> 
                   </div>
 
                   <div className="col-lg-3 col-md-6">
