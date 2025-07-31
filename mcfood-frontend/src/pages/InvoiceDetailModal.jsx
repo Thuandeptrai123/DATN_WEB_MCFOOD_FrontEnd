@@ -1,3 +1,4 @@
+import invoiceService from "../api/invoiceService";
 import React from "react";
 
 const InvoiceDetailModal = ({ invoice, onClose }) => {
@@ -8,8 +9,8 @@ const InvoiceDetailModal = ({ invoice, onClose }) => {
       "Paid": { class: "success", text: "Đã thanh toán", icon: "fas fa-check-circle" },
       "Pending": { class: "warning", text: "Chờ xử lý", icon: "fas fa-clock" },
       "Cancelled": { class: "danger", text: "Đã hủy", icon: "fas fa-times-circle" },
-      "Processing": { class: "info", text: "Đang xử lý", icon: "fas fa-spinner" },
-      "Delivered": { class: "success", text: "Đã giao", icon: "fas fa-truck" }
+      // "Processing": { class: "info", text: "Đang xử lý", icon: "fas fa-spinner" },
+      // "Delivered": { class: "success", text: "Đã giao", icon: "fas fa-truck" }
     };
 
     const config = statusConfig[status] || { class: "secondary", text: status, icon: "fas fa-question" };
@@ -369,6 +370,23 @@ const InvoiceDetailModal = ({ invoice, onClose }) => {
 
         {/* Modal Footer */}
         <div style={customStyles.modalFooter}>
+          <button
+            style={{ ...customStyles.actionBtn, marginRight: '1rem' }}
+            onClick={() => invoiceService.exportInvoice(invoice.Id)}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#198754';
+              e.target.style.transform = 'translateY(-1px)';
+              e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#212529';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            <i className="fas fa-print"></i>
+            In hóa đơn
+          </button>
           <button
             style={customStyles.actionBtn}
             onClick={onClose}
