@@ -44,12 +44,38 @@ const getInvoiceDetail = async (invoiceId, token) => {
   return response.data; // ✅ trả về chuẩn
 };
 
+const exportInvoice = async (invoiceId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(`${API_URL}/export-pdf/${invoiceId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (res.data && res.data.Data) {
+      const fileUrl = `https://localhost:7233${res.data.Data}`;
+      window.open(fileUrl, "_blank");
+    } else {
+      alert("Không thể xuất hóa đơn.");
+      console.error("Không có dữ liệu để xuất hóa đơn.", res.data);
+    }
+  } catch (err) {
+    console.error("❌ Lỗi xuất hóa đơn:", err);
+    alert("Lỗi khi xuất hóa đơn.");
+  }
+};
+
+
+
 
 const invoiceService = {
   getMyCart,
   createInvoice,
   getInvoicesByCustomer,
   getInvoiceDetail,
+  exportInvoice,
 };
 
 export default invoiceService;
