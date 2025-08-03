@@ -13,7 +13,9 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const token = localStorage.getItem("token");
-  const { addItem } = useCart();
+  // const { addItem } = useCart();
+  const { clearCart } = useCart();
+
 
   useEffect(() => {
     if (!token) {
@@ -46,26 +48,90 @@ const CheckoutPage = () => {
     fetchCart();
   }, [token, navigate]);
 
+  // const handleCreateInvoice = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await invoiceService.createInvoice(userInfo?.Id);
+  //     console.log("Invoice response:", response);
+
+  //     if (response?.ErrorCode === 0) {
+  //       toast.success("Đặt hàng thành công!");
+  //       navigate("/order-history");
+  //       window.location.reload(); 
+  //     } else {
+  //       toast.error(response?.Message || "Tạo hóa đơn thất bại.");
+  //       console.error("Lỗi tạo hóa đơn:", response);
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi tạo hóa đơn:", error);
+  //     toast.error(error.message || "Đã xảy ra lỗi khi tạo hóa đơn.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // const handleCreateInvoice = async () => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Gửi customerId:", userInfo?.Id); // 👉 log để kiểm tra
+
+  //     const response = await invoiceService.createInvoice(userInfo?.Id);
+
+  //     console.log("Invoice response:", response);
+
+  //     if (response?.errorCode === 0) {
+  //       toast.success("Đặt hàng thành công!");
+  //       navigate("/order-history");
+  //       window.location.reload();
+  //     } else {
+  //       toast.error(response?.message || "Tạo hóa đơn thất bại.");
+  //       console.error("Lỗi tạo hóa đơn:", response);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Lỗi tạo hóa đơn:", error);
+  //     toast.error(
+  //       error?.response?.data?.message ||
+  //       error?.message ||
+  //       "Đã xảy ra lỗi khi tạo hóa đơn."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleCreateInvoice = async () => {
     try {
       setLoading(true);
+      console.log("🧾 Gửi customerId:", userInfo?.Id);
+
       const response = await invoiceService.createInvoice(userInfo?.Id);
-      console.log("Invoice response:", response);
+
+      console.log("📦 Invoice response:", response);
 
       if (response?.ErrorCode === 0) {
-        toast.success("Đặt hàng thành công!");
+        toast.success(response?.Message || "Đặt hàng thành công!");
+        clearCart();
         navigate("/order-history");
+        window.location.reload();
       } else {
         toast.error(response?.Message || "Tạo hóa đơn thất bại.");
-        console.error("Lỗi tạo hóa đơn:", response);
+        console.error("❌ Lỗi tạo hóa đơn:", response);
       }
     } catch (error) {
-      console.error("Lỗi tạo hóa đơn:", error);
-      toast.error(error.message || "Đã xảy ra lỗi khi tạo hóa đơn.");
+      console.error("❌ Exception:", error);
+      toast.error(
+        error?.response?.data?.Message ||
+        error?.message ||
+        "Đã xảy ra lỗi khi tạo hóa đơn."
+      );
     } finally {
       setLoading(false);
     }
   };
+
+
+
+  const handleCancleOrder = () => {
+    navigate("/cart");
+  }
 
   const customStyles = {
     container: {
@@ -336,6 +402,13 @@ const CheckoutPage = () => {
                       </>
                     )}
                   </button>
+                  <i>          </i>
+                  <button
+                  onClick={handleCancleOrder}
+                  style={customStyles.confirmBtn}
+                  >
+                    <i className="fas fa-check-circle me-2">Hủy</i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -347,3 +420,8 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+
+
+
+2/2
+

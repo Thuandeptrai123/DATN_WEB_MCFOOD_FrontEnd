@@ -18,6 +18,10 @@ export default function OrderHistory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -112,7 +116,119 @@ export default function OrderHistory() {
     }
 
     setFilteredInvoices(filtered);
+    // Reset to first page when filters change
+    setCurrentPage(1);
   }, [invoices, statusFilter, dateFilter, searchTerm, sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentInvoices = filteredInvoices.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top of table
+    document.querySelector('.table-responsive')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    // Previous button
+    pages.push(
+      <li key="prev" className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+        <button 
+          className="page-link" 
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <i className="fas fa-chevron-left"></i>
+        </button>
+      </li>
+    );
+
+    // First page
+    if (startPage > 1) {
+      pages.push(
+        <li key={1} className="page-item">
+          <button className="page-link" onClick={() => handlePageChange(1)}>1</button>
+        </li>
+      );
+      if (startPage > 2) {
+        pages.push(
+          <li key="ellipsis1" className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        );
+      }
+    }
+
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
+          <button 
+            className="page-link" 
+            onClick={() => handlePageChange(i)}
+            style={currentPage === i ? { backgroundColor: '#212529', borderColor: '#212529' } : {}}
+          >
+            {i}
+          </button>
+        </li>
+      );
+    }
+
+    // Last page
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(
+          <li key="ellipsis2" className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        );
+      }
+      pages.push(
+        <li key={totalPages} className="page-item">
+          <button className="page-link" onClick={() => handlePageChange(totalPages)}>
+            {totalPages}
+          </button>
+        </li>
+      );
+    }
+
+    // Next button
+    pages.push(
+      <li key="next" className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+        <button 
+          className="page-link" 
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <i className="fas fa-chevron-right"></i>
+        </button>
+      </li>
+    );
+
+    return (
+      <nav aria-label="Phân trang đơn hàng">
+        <ul className="pagination justify-content-center mb-0">
+          {pages}
+        </ul>
+      </nav>
+    );
+  };
   
   const handleViewInvoice = async (invoiceId) => {
     try {
@@ -148,7 +264,9 @@ export default function OrderHistory() {
   };
 
   const isNewestInvoice = (invoice, index) => {
-    return index === 0 && filteredInvoices.length > 1;
+    // Check if it's the newest invoice in the entire filtered list, not just current page
+    const globalIndex = filteredInvoices.findIndex(inv => inv.id === invoice.id);
+    return globalIndex === 0 && filteredInvoices.length > 1;
   };
 
   const customStyles = {
@@ -227,6 +345,11 @@ export default function OrderHistory() {
       textAlign: 'center',
       padding: '3rem',
       color: '#6c757d'
+    },
+    paginationWrapper: {
+      backgroundColor: '#f8f9fa',
+      padding: '1.5rem',
+      borderTop: '1px solid #e9ecef'
     }
   };
 
@@ -319,6 +442,12 @@ export default function OrderHistory() {
                   <small className="text-muted">
                     <i className="fas fa-info-circle me-1"></i>
                     Tìm thấy {filteredInvoices.length} đơn hàng
+                    {filteredInvoices.length > itemsPerPage && (
+                      <span className="ms-2">
+                        | Trang {currentPage} / {totalPages}
+                        | Hiển thị {startIndex + 1}-{Math.min(endIndex, filteredInvoices.length)} 
+                      </span>
+                    )}
                   </small>
                   {(statusFilter !== "all" || dateFilter !== "all" || searchTerm) && (
                     <button
@@ -379,7 +508,7 @@ export default function OrderHistory() {
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredInvoices.map((invoice, index) => (
+                        {currentInvoices.map((invoice, index) => (
                           <tr 
                             key={invoice.id || index}
                             style={isNewestInvoice(invoice, index) ? customStyles.newestRow : {}}
@@ -442,6 +571,20 @@ export default function OrderHistory() {
                   </div>
                 )}
               </div>
+
+              {/* Pagination */}
+              {filteredInvoices.length > 0 && totalPages > 1 && (
+                <div style={customStyles.paginationWrapper}>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="text-muted small">
+                      <i className="fas fa-list me-1"></i>
+                      Hiển thị {startIndex + 1}-{Math.min(endIndex, filteredInvoices.length)} 
+                      trên tổng số {filteredInvoices.length} đơn hàng
+                    </div>
+                    {renderPagination()}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
