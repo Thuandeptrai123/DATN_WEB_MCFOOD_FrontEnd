@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import CartService from "../api/cartService";
+import { toast } from "react-toastify";
 
 const CartContext = createContext();
 
@@ -17,10 +18,21 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // const addItem = async (item) => {
+  //   await CartService.addItemToCart(item); // ví dụ: { FoodID, Quantity }
+  //   await fetchCart(); // cập nhật lại cart sau khi thêm
+  // };
   const addItem = async (item) => {
-    await CartService.addItemToCart(item); // ví dụ: { FoodID, Quantity }
-    await fetchCart(); // cập nhật lại cart sau khi thêm
+    try {
+      await CartService.addItemToCart(item); // ví dụ: { FoodID, Quantity }
+      await fetchCart(); // cập nhật lại cart sau khi thêm
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || "❌ Lỗi khi thêm sản phẩm vào giỏ hàng.";
+      toast.error(message);
+    }
   };
+
 
   const updateItem = async (id, quantity) => {
     await CartService.updateCartItem(id, quantity);
