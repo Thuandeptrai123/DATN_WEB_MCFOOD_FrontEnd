@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllFoods } from "../api/foodService";
+import { getAllAvailableFoods } from "../api/foodService";
 import { getAllCombos } from "../api/CombosService";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,8 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import CartService from "../api/cartService";
 import { useCart } from "../Context/CartContext"; 
+import RecentPurchaseSection from "../components/ui/RecentPurchaseSection"; // ✅ Thêm phần mua gần đây
+
 
 export default function ProductList() {
   const [foods, setFoods] = useState([]);
@@ -34,6 +37,8 @@ export default function ProductList() {
   const navigate = useNavigate();
   const customer = useSelector((state) => state.auth.customer);
   const { addItem } = useCart();
+  const [foodQuantities, setFoodQuantities] = useState({});
+
 
   const bannerImages = [
     "/pic/banner1.jpg",
@@ -77,17 +82,37 @@ export default function ProductList() {
   };
 
   useEffect(() => {
+    // const fetchFoods = async () => {
+    //   try {
+    //     const res = await getAllAvailableFoods();
+    //     setFoods(Array.isArray(res.data.Data) ? res.data.Data : []);
+    //   } catch (err) {
+    //     console.error("Lỗi khi lấy danh sách món ăn:", err);
+    //     toast.error("Không thể tải danh sách sản phẩm");
+    //   } finally {
+    //     setLoadingFoods(false);
+    //   }
+    // };
     const fetchFoods = async () => {
-      try {
-        const res = await getAllFoods();
-        setFoods(Array.isArray(res.data.Data) ? res.data.Data : []);
-      } catch (err) {
-        console.error("Lỗi khi lấy danh sách món ăn:", err);
-        toast.error("Không thể tải danh sách sản phẩm");
-      } finally {
-        setLoadingFoods(false);
-      }
-    };
+    try {
+      const res = await getAllAvailableFoods();
+      const foodList = Array.isArray(res.data.Data) ? res.data.Data : [];
+      setFoods(foodList);
+
+      setFoodQuantities(
+        foodList.reduce((acc, food) => {
+          acc[food.Id] = food.CookedQuantity ?? 0;
+          return acc;
+        }, {})
+      );
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách món ăn:", err);
+      toast.error("Không thể tải danh sách sản phẩm");
+    } finally {
+      setLoadingFoods(false);
+    }
+  };
+
 
     const fetchCombos = async () => {
       try {
@@ -280,6 +305,20 @@ export default function ProductList() {
     );
   };
 
+  // const handleAddToCart = async (item, type = "food") => {
+  //   try {
+  //     const data =
+  //       type === "food"
+  //         ? { FoodID: item.Id, Quantity: 1 }
+  //         : { ComboID: item.Id, Quantity: 1 };
+
+  //     await addItem(data); // dùng context thay vì gọi API riêng
+  //     toast.success("✅ Đã thêm vào giỏ hàng!");
+  //   } catch (error) {
+  //     console.error("❌ Lỗi khi thêm giỏ hàng:", error);
+  //     toast.error("❌ Không thể thêm vào giỏ hàng");
+  //   }
+  // };
   const handleAddToCart = async (item, type = "food") => {
     try {
       const data =
@@ -287,8 +326,17 @@ export default function ProductList() {
           ? { FoodID: item.Id, Quantity: 1 }
           : { ComboID: item.Id, Quantity: 1 };
 
-      await addItem(data); // dùng context thay vì gọi API riêng
+      await addItem(data); // gọi context để sync giỏ hàng
       toast.success("✅ Đã thêm vào giỏ hàng!");
+
+      // Giảm số lượng món ăn cookable
+      if (type === "food") {
+        setFoodQuantities((prev) => ({
+          ...prev,
+          [item.Id]: Math.max(0, (prev[item.Id] || 0) - 1),
+        }));
+      }
+
     } catch (error) {
       console.error("❌ Lỗi khi thêm giỏ hàng:", error);
       toast.error("❌ Không thể thêm vào giỏ hàng");
@@ -415,7 +463,7 @@ export default function ProductList() {
               </button>
             </div>
           </div>
-
+            
           {/* Results Info */}
           <div className="results-info mt-3">
             <small className="text-muted">
@@ -433,7 +481,8 @@ export default function ProductList() {
             </small>
           </div>
         </section>
-
+        {/* Hiển thị "Mua gần đây" nếu người dùng đã từng mua */}
+        <RecentPurchaseSection />
         {/* Món ăn */}
         {showFoods && (
           <section className="section-spacing">
@@ -479,7 +528,10 @@ export default function ProductList() {
                           <div className="product-price">
                             <span>{food.Price?.toLocaleString()} ₫</span>
                           </div>
-                          <button
+                          <p className="text-muted small">
+                            Còn lại: {foodQuantities[food.Id] ?? food.CookedQuantity} suất
+                          </p>
+                          {/* <button
                             className="btn-add"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -487,6 +539,18 @@ export default function ProductList() {
                             }}
                           >
                             Thêm vào giỏ
+                          </button> */}
+                          <button
+                            className="btn-add"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(food, "food");
+                            }}
+                            disabled={(foodQuantities[food.Id] ?? food.CookedQuantity) <= 0}
+                          >
+                            {(foodQuantities[food.Id] ?? food.CookedQuantity) <= 0
+                              ? "Hết hàng"
+                              : "Thêm vào giỏ"}
                           </button>
                         </div>
                       </div>
@@ -578,172 +642,6 @@ export default function ProductList() {
           </section>
         )}
       </div>
-
-      {/* Thêm CSS cho search và filter + pagination */}
-      <style jsx>{`
-        .search-filter-section {
-          background: rgba(255, 255, 255, 0.9);
-          border-radius: 15px;
-          padding: 20px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          backdrop-filter: blur(10px);
-        }
-
-        .search-input {
-          border: 2px solid #e9ecef;
-          border-radius: 25px;
-          padding: 12px 20px;
-          font-size: 16px;
-          transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-          border-color: #007bff;
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          transform: translateY(-2px);
-        }
-
-        .filter-select {
-          border-radius: 10px;
-          border: 2px solid #e9ecef;
-          padding: 10px 15px;
-          transition: all 0.3s ease;
-        }
-
-        .filter-select:focus {
-          border-color: #007bff;
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        .category-toggles {
-          display: flex;
-          gap: 15px;
-          align-items: center;
-        }
-
-        .form-check-input:checked {
-          background-color: #007bff;
-          border-color: #007bff;
-        }
-
-        .form-check-label {
-          font-weight: 500;
-          color: #495057;
-          cursor: pointer;
-        }
-
-        .results-info {
-          padding: 10px 0;
-          border-top: 1px solid #e9ecef;
-        }
-
-        .empty-alert {
-          text-align: center;
-          padding: 40px;
-          background: rgba(255, 255, 255, 0.8);
-          border-radius: 15px;
-          margin: 20px 0;
-        }
-
-        .btn-outline-secondary:hover {
-          transform: translateY(-2px);
-          transition: all 0.3s ease;
-        }
-
-        /* Pagination Styles */
-        .pagination-wrapper {
-          margin: 30px 0;
-          padding: 20px 0;
-        }
-
-        .pagination {
-          margin-bottom: 10px;
-        }
-
-        .page-link {
-          border: 2px solid #e9ecef;
-          color: #495057;
-          padding: 8px 16px;
-          margin: 0 2px;
-          border-radius: 8px;
-          font-weight: 500;
-          transition: all 0.3s ease;
-          background: white;
-        }
-
-        .page-link:hover {
-          background-color: #007bff;
-          border-color: #007bff;
-          color: white;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-        }
-
-        .page-link:focus {
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        .page-item.active .page-link {
-          background-color: #007bff;
-          border-color: #007bff;
-          color: white;
-          font-weight: bold;
-          transform: scale(1.1);
-        }
-
-        .page-item.disabled .page-link {
-          color: #6c757d;
-          background-color: #f8f9fa;
-          border-color: #dee2e6;
-          cursor: not-allowed;
-        }
-
-        .page-item.disabled .page-link:hover {
-          transform: none;
-          box-shadow: none;
-        }
-
-        .pagination-info {
-          color: #6c757d;
-          font-size: 14px;
-        }
-
-        /* Responsive Pagination */
-        @media (max-width: 768px) {
-          .search-filter-section {
-            padding: 15px;
-          }
-          
-          .category-toggles {
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start;
-          }
-
-          .pagination {
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-
-          .page-link {
-            padding: 6px 12px;
-            font-size: 14px;
-            margin: 1px;
-          }
-
-          .pagination-wrapper {
-            margin: 20px 0;
-            padding: 15px 0;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .page-link {
-            padding: 5px 8px;
-            font-size: 12px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

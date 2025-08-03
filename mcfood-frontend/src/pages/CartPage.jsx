@@ -51,15 +51,35 @@ const CartPage = () => {
     }
   }, [cart, fetchCart, navigate]);
 
-    const handleQuantityChange = async (cartItemId, quantity) => {
-      if (quantity < 1) return;
-      try {
-        await updateItem(cartItemId, quantity); // context tự gọi fetchCart
-        toast.success("Cập nhật số lượng thành công!");
-      } catch (error) {
-        console.error("Lỗi khi cập nhật số lượng:", error);
-      }
-    };
+    // const handleQuantityChange = async (cartItemId, quantity) => {
+    //   if (quantity < 1) return;
+    //   try {
+    //     await updateItem(cartItemId, quantity); // context tự gọi fetchCart
+    //     toast.success("Cập nhật số lượng thành công!");
+    //   } catch (error) {
+    //     console.error("Lỗi khi cập nhật số lượng:", error);
+    //   }
+    // };
+    const handleQuantityChange = async (cartItemId, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    const item = cart.Items.find((i) => i.CartItemId === cartItemId);
+    if (!item) return;
+
+    const oldQuantity = item.TotalQuantity;
+    const delta = newQuantity - oldQuantity;
+    const isFood = item.FoodDetails !== null;
+    const type = isFood ? "food" : "combo";
+
+    try {
+      await updateItem(cartItemId, newQuantity, type, delta); // thêm type + delta
+      toast.success("Cập nhật số lượng thành công!");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật số lượng:", error);
+      toast.error("Cập nhật thất bại!");
+    }
+  };
+
 
     const handleRemoveItem = async (cartItemId) => {
       try {
