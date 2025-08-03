@@ -50,6 +50,6 @@ npm install
 npm start
 ```
 
-Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:3001](http://localhost:3000)
+Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:3000](http://localhost:3001)
 
 ---
