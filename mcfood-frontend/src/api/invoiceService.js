@@ -12,8 +12,25 @@ const getMyCart = async () => {
   return response.data;
 };
 
+// const createInvoice = async (customerId) => {
+//   const token = localStorage.getItem("token");
+//   const response = await axios.post(
+//     `${API_URL}/create`,
+//     { customerId },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     }
+//   );
+//   return response.data;
+// };
+
 const createInvoice = async (customerId) => {
   const token = localStorage.getItem("token");
+
+  console.log("➡️ Gửi API /invoice/create với customerId:", customerId);
+
   const response = await axios.post(
     `${API_URL}/create`,
     { customerId },
@@ -23,8 +40,10 @@ const createInvoice = async (customerId) => {
       },
     }
   );
+
   return response.data;
 };
+
 
 const getInvoicesByCustomer = async (customerId, token) => {
   const response = await axios.get(`${API_URL}/${customerId}`, {
@@ -66,6 +85,31 @@ const exportInvoice = async (invoiceId) => {
     alert("Lỗi khi xuất hóa đơn.");
   }
 };
+const getLastInvoiceRecommendations = async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${API_URL}/recommendation/latest`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+const getFavoriteFoods = async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${API_URL}/recommendation/favorite`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+const getMostPopularFoods = async () => {
+  const response = await axios.get(`${API_URL}/recommendation/popular`);
+  return response.data;
+};
+
 
 
 
@@ -76,6 +120,9 @@ const invoiceService = {
   getInvoicesByCustomer,
   getInvoiceDetail,
   exportInvoice,
+  getLastInvoiceRecommendations,
+  getFavoriteFoods,
+  getMostPopularFoods,
 };
 
 export default invoiceService;
