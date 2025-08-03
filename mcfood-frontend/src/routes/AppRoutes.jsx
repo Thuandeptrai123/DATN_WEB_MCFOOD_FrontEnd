@@ -23,10 +23,12 @@ import ConfirmEmail from "../pages/ConfirmEmail";
 import UnauthorizedPage from "../pages/401";
 import PageNotFound from "../pages/PageNotFound";
 import GuestRoute from "./GuestRoute"; 
-
+import ScrollToTop from "./ScrollToTop";
+import Menu from "../pages/Menu";
 export default function AppRoutes() {
   return (
     <Router>
+       <ScrollToTop />
       <Routes>
         {/* Các route không dùng layout */}
         <Route  path="/login"  element={<GuestRoute> <LoginPage /></GuestRoute>}/>
@@ -34,6 +36,7 @@ export default function AppRoutes() {
         <Route path="/401" element={<UnauthorizedPage />} />
 
         {/* Các route dùng layout chung */}
+        
         <Route element={<MainLayout />}>
           <Route path="/" element={<ProductList />} />
           <Route path="/home" element={<HomePage />} />
@@ -56,6 +59,7 @@ export default function AppRoutes() {
           {/* <Route path="/checkout" element={<CheckoutPage customerId={user.id} />} /> */}
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-history" element={<OrderHistory />} />
+          <Route path="/menu" element={<Menu />} />
 
         </Route>
       </Routes>
