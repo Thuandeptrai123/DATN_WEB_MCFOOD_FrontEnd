@@ -5,6 +5,8 @@ import { logout } from "../store/authSlice";
 import "./Header.css";
 import CartDropdown from "./CartDropdown";
 import { useCart } from "../Context/CartContext"; // ✅ Dùng context
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -51,7 +53,7 @@ export default function Header() {
       </div>
 
       <nav className={`header-nav ${isMobileMenuOpen ? "active" : ""}`}>
-        <Link to="/" className="header-link" onClick={closeMobileMenu}>
+        <Link to="/menu" className="header-link" onClick={closeMobileMenu}>
           Thực đơn
         </Link>
 

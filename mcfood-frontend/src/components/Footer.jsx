@@ -28,8 +28,8 @@ export default function Footer() {
         <div style={{ flex: "1 1 200px", marginBottom: "20px" }}>
           <h3 style={{ color: "#fff" }}>Liên hệ</h3>
           <p>Email: support@mcfood.vn</p>
-          <p>Hotline: 0123 456 789</p>
-          <p>Địa chỉ: 123 Đường Ẩm Thực, TP. Hồ Chí Minh</p>
+          <p>Hotline: 0972 914 825</p>
+          <p>Địa chỉ: Công viên phần mềm Quang Trung, Quận 12, Thành phố Hồ Chí Minh</p>
         </div>
 
         <div style={{ flex: "1 1 250px", marginBottom: "20px" }}>
@@ -38,7 +38,7 @@ export default function Footer() {
             <li>Trần Toàn - Backend, Frontend Developer</li>
             <li>Khắc Thuần - Backend, Frontend Developer</li>
             <li>Chí Linh - Backend Developer, Document writer</li>
-            <li>Thịnh - Mockup, UI/UX Designer</li>
+            <li>Cường Thịnh - Mockup, UI/UX Designer</li>
           </ul>
         </div>
       </div>
