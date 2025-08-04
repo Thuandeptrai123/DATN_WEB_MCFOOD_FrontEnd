@@ -25,6 +25,7 @@ import PageNotFound from "../pages/PageNotFound";
 import GuestRoute from "./GuestRoute"; 
 import ScrollToTop from "./ScrollToTop";
 import Menu from "../pages/Menu";
+import Recommendation from "../pages/RecommendationPage";
 export default function AppRoutes() {
   return (
     <Router>
@@ -60,7 +61,7 @@ export default function AppRoutes() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-history" element={<OrderHistory />} />
           <Route path="/menu" element={<Menu />} />
-
+          <Route path="/recommendation" element={<Recommendation />} />
         </Route>
       </Routes>
     </Router>

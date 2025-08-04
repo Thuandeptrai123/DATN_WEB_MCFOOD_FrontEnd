@@ -1,0 +1,215 @@
+/* src/pages/RecommendationPage.css */
+
+/* Global styles */
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.text-dark {
+  color: #212529 !important;
+}
+
+/* Header styles */
+.display-4 {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.text-primary {
+  color: #0d6efd !important;
+}
+
+.lead {
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+/* Section styles */
+.recommendation-section {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.recommendation-section:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.section-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.section-content {
+  padding: 1.5rem;
+}
+
+/* Card styles */
+.recommendation-card {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-card:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 3px 12px rgba(13, 110, 253, 0.15);
+  transform: translateY(-1px);
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  line-height: 1.3;
+  color: #212529 !important;
+}
+
+/* Badge styles */
+.recommendation-badge {
+  background: #f8f9fa;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Stats styles */
+.recommendation-stats {
+  margin-top: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.stat-item:last-child {
+  margin-bottom: 0;
+}
+
+.stat-label {
+  color: #6c757d;
+  margin-right: 0.5rem;
+}
+
+.stat-value {
+  color: #212529;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* No data styles */
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.no-data i {
+  font-size: 2rem;
+  display: block;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .section-header {
+    padding: 1rem;
+  }
+  
+  .section-content {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .display-4 {
+    font-size: 1.75rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Animation for smooth loading */
+.recommendation-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon colors */
+.text-success {
+  color: #198754 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-info {
+  color: #0dcaf0 !important;
+}
+
+/* Hover effects for icons */
+.recommendation-card:hover .fas {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}

@@ -23,12 +23,17 @@ const updateProfile = (formData, token) => {
 };
 
 
-const changePassword = (data, token) => {
-  return axios.put(`${API_URL}/change-password`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const changePassword = async (data, token) => {
+  try {
+    const response = await axios.put(`${API_URL}/change-password`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
 };
 
 export default {

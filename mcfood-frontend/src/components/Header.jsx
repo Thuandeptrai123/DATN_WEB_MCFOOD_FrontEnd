@@ -58,8 +58,8 @@ export default function Header() {
         </Link>
 
         {/* ❤️ Yêu thích (chưa dùng context, nếu có thì tương tự) */}
-        <Link to="/favorites" className="header-link" onClick={closeMobileMenu}>
-          Yêu thích
+        <Link to="/recommendation" className="header-link" onClick={closeMobileMenu}>
+          Gợi ý
         </Link>
 
         {/* 🛒 Giỏ hàng có dropdown + badge */}

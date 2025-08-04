@@ -459,7 +459,7 @@ export default function ProfilePage() {
 
                 {/* Action Buttons */}
                 <div className="action-buttons">
-                  <button className="btn btn-modern btn-outline-modern flex-fill">
+                  <button className="btn btn-modern btn-outline-modern flex-fill" onClick={() => navigate("/change-password")}>
                     🔒 Đổi mật khẩu
                   </button>
                   {/* <button 

@@ -3,6 +3,7 @@ import invoiceService from "../api/invoiceService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import InvoiceDetailModal from "./InvoiceDetailModal";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderHistory() {
   const userInfo = useSelector((state) => state.auth.user);
@@ -11,6 +12,9 @@ export default function OrderHistory() {
   const [invoices, setInvoices] = useState([]);
   const [filteredInvoices, setFilteredInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token1 = localStorage.getItem("token");
+  const navigate = useNavigate();
+  
   
   // Filter states
   const [statusFilter, setStatusFilter] = useState("all");
@@ -21,13 +25,16 @@ export default function OrderHistory() {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        if (!userInfo?.Id) {
-          toast.error("Không tìm thấy thông tin người dùng!");
-          return;
+        // if (!userInfo?.Id) {
+        //   toast.error("Không tìm thấy thông tin người dùng!");
+        //   return;
+        // }
+        if (!token1) {
+          return navigate("/401");
         }
 
         const res = await invoiceService.getInvoicesByCustomer(userInfo.Id, token);
