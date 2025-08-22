@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ChangePasswordPage() {
   const [form, setForm] = useState({
@@ -12,6 +13,13 @@ export default function ChangePasswordPage() {
     confirmNewPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // ✅ Thêm state để toggle hiển thị mật khẩu
+  const [showPassword, setShowPassword] = useState({
+    old: false,
+    new: false,
+    confirm: false,
+  });
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -143,63 +151,114 @@ export default function ChangePasswordPage() {
           color: #6c757d;
           margin-top: 0.5rem;
         }
+        .input-group {
+          display: flex;
+          align-items: center;
+        }
+        .eye-btn {
+          background: none;
+          border: none;
+          margin-left: -35px;
+          cursor: pointer;
+          color: #6c757d;
+        }
       `}</style>
-      
+
       <div className="change-password-container">
         <div className="container" style={{ maxWidth: "500px" }}>
           <div className="form-card">
             <h2 className="form-title">Đổi mật khẩu</h2>
             <form onSubmit={handleSubmit}>
+              {/* Mật khẩu cũ */}
               <div className="mb-3">
                 <label className="form-label">Mật khẩu cũ</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="oldPassword"
-                  value={form.oldPassword}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                />
+                <div className="input-group">
+                  <input
+                    type={showPassword.old ? "text" : "password"}
+                    className="form-control"
+                    name="oldPassword"
+                    value={form.oldPassword}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() =>
+                      setShowPassword((prev) => ({ ...prev, old: !prev.old }))
+                    }
+                  >
+                    {showPassword.old ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
-              
+
+              {/* Mật khẩu mới */}
               <div className="mb-3">
                 <label className="form-label">Mật khẩu mới</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="newPassword"
-                  value={form.newPassword}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                />
+                <div className="input-group">
+                  <input
+                    type={showPassword.new ? "text" : "password"}
+                    className="form-control"
+                    name="newPassword"
+                    value={form.newPassword}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() =>
+                      setShowPassword((prev) => ({ ...prev, new: !prev.new }))
+                    }
+                  >
+                    {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 <div className="password-requirements">
                   Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt
                 </div>
               </div>
-              
+
+              {/* Xác nhận mật khẩu */}
               <div className="mb-4">
                 <label className="form-label">Nhập lại mật khẩu mới</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="confirmNewPassword"
-                  value={form.confirmNewPassword}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                />
+                <div className="input-group">
+                  <input
+                    type={showPassword.confirm ? "text" : "password"}
+                    className="form-control"
+                    name="confirmNewPassword"
+                    value={form.confirmNewPassword}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() =>
+                      setShowPassword((prev) => ({ ...prev, confirm: !prev.confirm }))
+                    }
+                  >
+                    {showPassword.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 className="btn btn-dark-custom"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     Đang xử lý...
                   </>
                 ) : (
