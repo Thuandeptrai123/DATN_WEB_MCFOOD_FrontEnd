@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getFoodById } from "../api/foodService";
 import { toast } from "react-toastify";
 import "../Styles/FoodDetail.css";
-import { useCart } from "../Context/CartContext"; // ✅ Đúng context
+import { useCart } from "../Context/CartContext";
 
 export default function FoodDetail() {
   const { id } = useParams();
@@ -12,7 +12,7 @@ export default function FoodDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const ImageAPIUrl = "https://localhost:7233";
-  const { addItem } = useCart(); // ✅ Lấy addItem từ context
+  const { addItem } = useCart();
 
   useEffect(() => {
     fetchFood();
@@ -30,7 +30,10 @@ export default function FoodDetail() {
   };
 
   const handleQuantityChange = (type) => {
-    if (type === "increase") {
+    if (!food) return;
+    const maxQuantity = food.CookedQuantity ?? 0;
+
+    if (type === "increase" && quantity < maxQuantity) {
       setQuantity((prev) => prev + 1);
     } else if (type === "decrease" && quantity > 1) {
       setQuantity((prev) => prev - 1);
@@ -39,13 +42,17 @@ export default function FoodDetail() {
 
   const handleAddToCart = async () => {
     try {
+      if (!food || quantity > (food.CookedQuantity ?? 0)) {
+        toast.error("Số lượng vượt quá tồn kho!");
+        return;
+      }
+
       const data = {
         foodId: food.Id,
         quantity: quantity,
       };
-      await addItem(data); // ✅ Cập nhật cart qua context
+      await addItem(data);
       toast.success("Đã thêm vào giỏ hàng!");
-      // ❌ KHÔNG cần reload
     } catch (error) {
       console.error("❌ Lỗi thêm giỏ hàng:", error);
       toast.error("Thêm vào giỏ hàng thất bại!");
@@ -115,12 +122,31 @@ export default function FoodDetail() {
                 <span className="fd-price-tag">Giá tốt</span>
               </div>
 
+              {/* Hiển thị số lượng còn lại */}
+              <p className="fd-stock">
+                {food.CookedQuantity > 0
+                  ? `Còn lại: ${food.CookedQuantity} suất`
+                  : "Hết hàng"}
+              </p>
+
               <div className="fd-quantity-wrapper">
                 <label className="fd-quantity-label">Số lượng:</label>
                 <div className="fd-quantity-controls">
-                  <button onClick={() => handleQuantityChange("decrease")} className="fd-btn-circle">-</button>
+                  <button
+                    onClick={() => handleQuantityChange("decrease")}
+                    className="fd-btn-circle"
+                    disabled={quantity <= 1}
+                  >
+                    -
+                  </button>
                   <span className="fd-quantity-number">{quantity}</span>
-                  <button onClick={() => handleQuantityChange("increase")} className="fd-btn-circle">+</button>
+                  <button
+                    onClick={() => handleQuantityChange("increase")}
+                    className="fd-btn-circle"
+                    disabled={quantity >= (food.CookedQuantity ?? 0)}
+                  >
+                    +
+                  </button>
                 </div>
               </div>
 
@@ -132,7 +158,13 @@ export default function FoodDetail() {
               </div>
 
               <div className="fd-action-buttons">
-                <button className="fd-btn-add" onClick={handleAddToCart}>🛒 Thêm vào giỏ hàng</button>
+                <button
+                  className="fd-btn-add"
+                  onClick={handleAddToCart}
+                  disabled={food.CookedQuantity <= 0}
+                >
+                  {food.CookedQuantity <= 0 ? "Hết hàng" : "🛒 Thêm vào giỏ hàng"}
+                </button>
                 <button className="fd-btn-like">❤️</button>
               </div>
             </div>
